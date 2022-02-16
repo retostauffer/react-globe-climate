@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import ReactGlobe from "react-globe";
 
+
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 
@@ -12,9 +13,11 @@ function markerTooltipRenderer(marker) {
   return `CITY: ${marker.city} (Value: ${marker.value})`;
 }
 
-const options = {
-  markerTooltipRenderer
-};
+const options = {markerTooltipRenderer};
+
+// Custom settings
+const locationInnsbruck = [47.268, 11.393]
+const globeTexture = "temperature.jpg"
 
 function App() {
   const randomMarkers = defaultMarkers.map((marker) => ({
@@ -46,6 +49,9 @@ function App() {
         height="100vh"
         markers={markers}
         options={options}
+        initialCameraDistanceRadiusScale={3}
+        globeTexture={globeTexture}
+        initialCoordinates={locationInnsbruck}
         width="100vw"
         onClickMarker={onClickMarker}
         onDefocus={onDefocus}

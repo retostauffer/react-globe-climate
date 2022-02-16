@@ -2,64 +2,65 @@
 # Just a quick test
 # ------------------------------------------
 
+rm(list = objects())
 
 library("zoo")
 library("stars")
-library("ggplot2")
 
 files <- list.files("_data", full.name = TRUE)
 files <- files[grepl("\\.grib$", files)]
 
 # Extracting reference period year and variable name
 get_file_info <- function(x) {
-    var  <- regmatches(x, regexpr("(?<=(ea_)).*?(?=(_))", x, perl = TRUE))
-    per  <- regmatches(x, regexpr("(?<=(_))[0-9]{4}-[0-9]{4}", x, perl = TRUE))
-    ymon <- regmatches(x, regexpr("(?<=(_))[0-9]{6}", x, perl = TRUE))
-    ymon <- as.yearmon(ymon, format = "%Y%m")
-    print(length(var))
-    print(length(per))
-    print(length(ymon))
-    data.frame(file = x, variable = var, reference = per, yearmon = ymon)
+    var   <- regmatches(x, regexpr("(?<=(ea_)).*?(?=(_))", x, perl = TRUE))
+    per   <- regmatches(x, regexpr("(?<=(_))[0-9]{4}-[0-9]{4}", x, perl = TRUE))
+    ymon  <- regmatches(x, regexpr("(?<=(_))[0-9]{6}", x, perl = TRUE))
+    ymon  <- as.yearmon(ymon, format = "%Y%m")
+    year  <- as.integer(format(as.Date(ymon), "%Y"))
+    month <- as.integer(format(as.Date(ymon), "%m"))
+    data.frame(file = x, variable = var, reference = per, yearmon = ymon,
+               year = year, month = month)
 }
-
 info <- get_file_info(files)
-head(info)
+tail(info)
 
-x <- subset(info, yearmon == as.yearmon("1984-04"))
-tmp <- read_stars(x$file)
-st_crs(tmp) <- st_crs(4326)
-tmp <- st_warp(tmp, st_as_stars(st_bbox(), dx = 0.125))
-
-
-library("rnaturalearth")
-countries <- ne_countries(returnclass = "sf")
-
-test_plot <- function(x, countries, col = hcl.colors(9, "Blue-Red"), ..., asp = 0) {
-    hold <- par(no.readonly = TRUE); on.exit(par(hold))
-    par(oma = rep(0, 4), mar = rep(0, 4))
-    ret <- image(x, asp = asp, ...)
-    plot(st_geometry(countries), new = FALSE)
-    invisible(ret)
-}
-test_plot(tmp[1], countries)
-
-
+# Libraries needed for plotting
 library("ggplot2")
 library("cowplot") # for theme_nothing()
 library("colorspace")
+library("rnaturalearth")
+countries <- ne_countries(returnclass = "sf")
 
-tmp2 <- st_warp(tmp, st_as_stars(st_bbox(), dx = 0.5))
-    ggplot() + geom_stars(data = tmp2[1]) + geom_sf(fill = NA, color = "white", data = countries) +
-        scale_fill_continuous_diverging("Green-Orange") +
-        theme_nothing() + scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
+# Creating some images
+year <- 2020
+for (month in 1:12) {
 
-jpeg(file = "react-globe-climate/public/temperature.jpg", width = 2880, height = 1440)
-    par(oma = rep(0, 4))
-    ggplot() + geom_stars(data = tmp[1]) + geom_sf(fill = NA, color = "white", data = countries) +
-        scale_fill_continuous_diverging("Green-Orange") +
-        theme_nothing() + scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
-dev.off()
+    hash <- sprintf("%04d-%02d", year, month)
 
+    cat("Processing", hash, "\n")
+    required_files <- subset(info, yearmon == as.yearmon(hash), select = file, drop = TRUE)
+    stopifnot(length(required_files) == 4)
+    tmp <- read_stars(required_files)
+    st_crs(tmp) <- st_crs(4326)
+    tmp <- st_warp(tmp, st_as_stars(st_bbox(), dx = 0.125))
 
+    ###tmp2 <- st_warp(tmp, st_as_stars(st_bbox(), dx = 0.5))
+    ###    ggplot() + geom_stars(data = tmp2[1]) + geom_sf(fill = NA, color = "gray30", data = countries) +
+    ###        scale_fill_continuous_diverging("Green-Orange") +
+    ###        theme_nothing() + scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
+
+    idx <- grep("_2t_", names(tmp))
+    stopifnot(length(idx) == 1L)
+
+    pngfile <- file.path("react-globe-climate", "public", sprintf("%s_temperature.png", hash))
+    cat(" .....", pngfile, "\n")
+    png(pngfile, width = 2880, height = 1440)
+        par(oma = rep(0, 4))
+        ggplot() + geom_stars(data = tmp[idx]) + geom_sf(fill = NA, color = "gray30", data = countries) +
+            scale_fill_continuous_diverging("Green-Orange") +
+            theme_nothing() + scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
+    dev.off()
+
+}
 
 
