@@ -22,7 +22,7 @@
         <StyleName>temperature</StyleName>
         <Datasource>
             <Parameter name="type">gdal</Parameter>
-            <Parameter name="file">_test2.tiff</Parameter>
+            <Parameter name="file">_test.tiff</Parameter>
             <Parameter name="band">1</Parameter>
         </Datasource>
     </Layer>

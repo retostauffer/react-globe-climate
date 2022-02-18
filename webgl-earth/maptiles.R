@@ -5,34 +5,28 @@ library("sf")
 library("rnaturalearth")
 library("cowplot")
 library("ggplot2")
+library("stars")
 
 countries <- ne_countries(returnclass = "sf")
-countries <- st_make_valid(countries)
-# No!! not flatcountries <- st_transform(countries, st_crs(3857))
+###countries <- st_make_valid(countries)
 
-plot(st_geometry(countries))
-
-get_limits <- function(box, x, y, n) {
-    tmp_x <- seq(-180, 180, length.out = n + 1)
-    tmp_y <- seq( -90,  90, length.out = n + 1)
-    list(xmin = tmp_x[x + 1], xmax = tmp_x[x + 2],
-         ymin = tmp_y[y + 1], ymax = tmp_y[y + 2])
+st_rectangle <- function(xmin, xmax, ymin, ymax, crs = 4326) {
+    m <- cbind(x = c(xmin, xmin, xmax, xmax, xmin),
+               y = c(ymin, ymax, ymax, ymin, ymin))
+    st_sfc(st_polygon(list(m)), crs = crs)
 }
-get_limit_bb <- function(box, x, y, n, crs = NULL) {
-    tmp_x <- seq(-180, 180, length.out = n + 1)
-    tmp_y <- seq( -90,  90, length.out = n + 1)
-    st_bbox(c(xmin = tmp_x[x + 1], xmax = tmp_x[x + 2],
-         ymin = tmp_y[y + 1], ymax = tmp_y[y + 2]), crs = if (is.null(crs)) st_crs(4623) else crs)
-}
-(bb <- get_limit_bb(st_bbox(countries), 0, 1, 2, st_crs(countries)))
-#get_limits(st_bbox(countries), 0, 1, 2)
-#get_limits(st_bbox(countries), 1, 1, 2)
 
 #####
 # https://wiki.openstreetmap.org/wiki/Zoom_levels
 # Number of tiles for each zoom level
+draw_a_tile <- function(i, j, ntiles, countries, col = "gray90", data = NULL) {
 
-draw_a_tile <- function(i, j, ntiles, countries, col = "gray90") {
+    countries <- st_transform(countries, 3395) # Mercator
+    if (!is.null(data)) {
+        stopifnot(inherits(data, "sf"))
+        data <- st_transform(data, crs = 3395)
+    }
+
     # Mercator x/y limits
     # x:   -20037508 to 20037508
     # y:   -20601982 to 20601982 -> taking 
@@ -44,15 +38,11 @@ draw_a_tile <- function(i, j, ntiles, countries, col = "gray90") {
     if (min(xlim) >= 20037508) xlim <- xlim - (2 * 20037508)
     ylim <- lats[j + 1:0]
 
-    # Just points; was originally going for a polygon but this should be fine.
-    #bbox_matrix <- matrix(c(xlim[1], xlim[1], xlim[2], xlim[2],
-    #                        ylim[1], ylim[2], ylim[2], ylim[1]),
-    #                      byrow = FALSE, ncol = 2)
-    #bbox_points <- lapply(seq_len(nrow(bbox_matrix)), function(i, m) st_point(m[i, ]), m = bbox_matrix)
-    #bbox_points <- st_transform(st_sfc(bbox_points, crs = st_crs(4326)), crs = 3395)
-
-    #xlim <- st_bbox(bbox_points)[c("xmin", "xmax")]
-    #ylim <- st_bbox(bbox_points)[c("ymin", "ymax")]
+    ##### Just points; was originally going for a polygon but this should be fine.
+    ####bbox_matrix <- matrix(c(xlim[1], xlim[1], xlim[2], xlim[2], xlim[1],
+    ####                        ylim[1], ylim[2], ylim[2], ylim[1], ylim[1]),
+    ####                      byrow = FALSE, ncol = 2)
+    ####bbox <- st_sfc(st_polygon(list(bbox_matrix)), crs = 3395)
 
     # Drawing the tile
     hold <- par(no.readonly = TRUE); on.exit(par(hold))
@@ -60,34 +50,107 @@ draw_a_tile <- function(i, j, ntiles, countries, col = "gray90") {
 
     plot(NA, xlim = xlim, ylim = ylim, xaxs = "i", yaxs = "i", bty = "n")
     #plot(bbox, add = TRUE, border = 2, lwd = 3)
-    plot(st_cast(st_geometry(st_transform(countries, crs = 3395))), add = TRUE, col = col)
+    plot(st_cast(st_geometry(countries)), add = TRUE, col = col)
+    plot(st_geometry(data), col = data$color, border = NA, add = TRUE)
     text(mean(xlim), mean(ylim), sample(LETTERS, 1))
 
     # Development labeling
     text(xlim[1], ylim[2], sprintf("%d/%d", i, j), adj = c(-.5, 1.5), col = 2, font = 2, cex = 5)
     box(lwd = 5)
 }
-#u <- draw_a_tile(2, 1, ntiles[1], countries)
+
+u <- draw_a_tile(2, 1, ntiles[1], countries)
+u <- draw_a_tile(2, 1, ntiles[1], countries, data = data)
 
 
 # Number of tiles to be drawn
 ntiles <- c(4, 16, 64, 256, 1024)
-countries <- ne_countries(returnclass = "sf")
+
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Reading stars for plotting demo
+files <- list.files("../_data", full.names = TRUE)
+files <- files[grep("grib$", files)]
+file  <- files[1]
+
+library("stars")
+st <- read_stars(file)
+st_crs(st) <- st_crs(4326)
+bbox <- st_rectangle(-0.125, 359.875, -85, 85, 4326)
+st <- st_crop(st, st_bbox(bbox))
+
+data <- setNames(st_as_sf(st[1], crs = 4326), c("value", "geometry"))
+value_to_color <- function(x, colors = hcl.colors(11, "Blue-Red")) {
+    stopifnot(is.numeric(x))
+    zlim <- max(abs(range(x, na.rm = TRUE))) * c(-1, 1)
+    col <- colors[as.integer(cut(x, breaks = length(colors) + 1, include.lowest = TRUE))]
+    return(col)
+}
+data$color <- value_to_color(data$value)
+head(data)
+
+# Problem are lat == 90! Cut those outside 85.
+uu <- st_transform(data, crs = 3395)
+plot(st_geometry(uu), col = uu$color, border = NA)
+
+
+
+
+
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Plotting ...
 
 png_pixels <- 500
-
 for (zoom in 1:4) {
     for (x in seq_len(sqrt(ntiles[zoom]))) {
         for (y in seq_len(sqrt(ntiles[zoom]))) {
             # Note that tile names are 0-based; as well as the zoom
             dir.create(dir <- sprintf("tiles/%d/%d", zoom, x - 1), showWarning = FALSE, recursive = TRUE)
-            pngname <- sprintf("%s/%d.png", dir, y - 1)
-            print(pngname)
-            png(file = pngname, height = png_pixels, width = ifelse(zoom == 1, 2, 1) * png_pixels)
+            #####pngname <- sprintf("%s/%d.png", dir, y - 1)
+            #####print(pngname)
+            #####png(file = pngname, height = png_pixels, width = ifelse(zoom == 1, 2, 1) * png_pixels)
+            #####    draw_a_tile(x, y, ntiles[zoom], countries, col = sample(rainbow(10), 1L))
+            #####dev.off()
+
+            svgname <- sprintf("%s/%d.svg", dir, y - 1)
+            cat("Drawing", svgnmae, "\r")
+            svg(file = svgname, height = 7, width = ifelse(zoom == 1, 2, 1) * 7)
                 draw_a_tile(x, y, ntiles[zoom], countries, col = sample(rainbow(10), 1L))
             dev.off()
         }
     }
 }
+cat("\n")
+
+
+
+
+
+
+
+
+
+
+###??
+library("ggplot2")
+ggplot() + geom_sf(data = data[, "value"]) + coord_map("mercator")
+
+file.remove("countries.shp")
+st_write(countries, "countries.shp")
+
+
+
+
+
+
+
+
+
+
+
+
 
 

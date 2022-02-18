@@ -10,6 +10,35 @@
       <LineSymbolizer stroke="black" stroke-width="1"/>
      </Rule>
   </Style>
+
+   <Style name="countries_label">
+     <Rule>
+      <!--  Only label those countries with over 9 Million People -->
+      <!--  Note: Halo and Fill are reversed to try to make them subtle -->
+      <Filter>[POP_EST] &gt;= 4320000 and [POP_EST] &lt; 9450000</Filter>
+      <TextSymbolizer size="7" fill="black" face-name="DejaVu Sans Bold" halo-fill="#DFDBE3" halo-radius="1" wrap-width="20">[NAME]</TextSymbolizer>
+     </Rule>
+          
+     <Rule>
+      <!--  Only label those countries with over 9 Million People -->
+      <!--  Note: Halo and Fill are reversed to try to make them subtle -->
+      <Filter>[POP_EST] &gt;= 9450000 and [POP_EST] &lt; 25650000</Filter>
+      <TextSymbolizer size="9" fill="black" face-name="DejaVu Sans Book" halo-fill="#DFDBE3" halo-radius="1" wrap-width="20">[NAME]</TextSymbolizer>
+     </Rule>
+     
+     <Rule>
+      <!--  Those with over 25 Million get larger labels -->
+      <Filter>[POP_EST] &gt;= 25650000 and [POP_EST] &lt; 1134000000</Filter>
+      <TextSymbolizer size="12" fill="white" face-name="DejaVu Sans Book" halo-fill="#2E2F39" halo-radius="1" wrap-width="20">[NAME]</TextSymbolizer>
+     </Rule>
+          
+     <Rule>
+      <!--  Those with over 25 Million get larger labels -->
+      <!--  Note: allow_overlap is true here to allow India/China to sneak through -->
+      <Filter>[POP_EST] &gt;= 1134000000</Filter>
+      <TextSymbolizer size="15" fill="white" face-name="DejaVu Sans Book" halo-fill="black" halo-radius="1" wrap-width="20" allow-overlap="true" avoid-edges="true">[NAME]</TextSymbolizer>
+     </Rule>
+  </Style>
   
   <Layer name="countries" srs="+proj=latlong +datum=WGS84" status="on">
     <!-- Style order determines layering hierarchy -->
@@ -18,7 +47,7 @@
     <StyleName>countries_label</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">ne_110m_admin_0_countries.shp</Parameter>
+      <Parameter name="file">boundaries/ne_110m_admin_0_countries.shp</Parameter>
     </Datasource>
   </Layer>
 

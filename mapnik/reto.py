@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     # World map
     mapnik.load_map(m, "background.xml")
-    ## mapnik.load_map(m, "world_population_mercator.xml")
+    mapnik.load_map(m, "world_population_mercator.xml")
 
     #bbox = mapnik.Box2d(mapnik.Coord(-180.0, -75.0), mapnik.Coord(180.0, 90.0))
     #bbox = mapnik.Box2d(mapnik.Coord(0, -90.0), mapnik.Coord(360.0, 90.0))
