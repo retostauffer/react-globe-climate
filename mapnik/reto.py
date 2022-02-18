@@ -32,7 +32,7 @@ if __name__ == "__main__":
                 ymax = 20048966.10)
 
     ntiles = [2, 4, 16, 64]
-    for zoom in range(1, 3):
+    for zoom in range(1, 4):
 
         xdiff = (mlim["xmax"] - mlim["xmin"]) / sqrt(ntiles[zoom])
         ydiff = (mlim["ymax"] - mlim["ymin"]) / sqrt(ntiles[zoom])
