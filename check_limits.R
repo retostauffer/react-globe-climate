@@ -54,13 +54,12 @@ get_limits <- function(x) {
 # Getting limits
 all_limits <- list()
 for (z in zipfiles) {
-    all_limits[z] <- get_limits(z)
+    all_limits[[z]] <- get_limits(z)
 }
 
-saveRDS(all_limits, "_test.rds")
-#all_limits <- do.call(rbind, all_limits)
-#rownames(all_limits) <- NULL
-#saveRDS(all_limits, "all_limits.rds")
+all_limits <- do.call(rbind, all_limits)
+##rownames(all_limits) <- NULL
+saveRDS(all_limits, "all_limits.rds")
 
 
 

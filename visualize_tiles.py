@@ -53,8 +53,9 @@ def grib_to_tiff(gribfile, outfile):
 # -----------------------------------------------------------------
 # Convert grib file to mercator-projected geotiff
 # -----------------------------------------------------------------
-def visualize_tiles(tiff, outdir):
+def visualize_tiles(tiff, variable, outdir):
 
+    import os
     import mapnik
     from numpy import sqrt
 
@@ -62,15 +63,16 @@ def visualize_tiles(tiff, outdir):
     m = mapnik.Map(1200, 1200, "+init=epsg:4326")
 
     # World map
-    mapnik.load_map(m, "mapnik/background.xml")
+    xmlfile = f"mapnik/background_{variable}.xml"
+    if not os.path.isfile(xmlfile):
+        raise Exception("Rquired file {xmlfile} does not exist.")
+    mapnik.load_map(m, xmlfile)
     mapnik.load_map(m, "mapnik/world_population_mercator.xml")
 
     # Mercator bounding box (x/y limits).
     # Defined for longitude -180/180 latitude ~-85/85.
-    mlim = dict(xmin = -20026376.39,
-                xmax = 20026376.39,
-                ymin = -20048966.10,
-                ymax = 20048966.10)
+    mlim = dict(xmin = -20026376.39, xmax = 20026376.39,
+                ymin = -20048966.10, ymax = 20048966.10)
 
     # Zoom level and the corresponding number of tiles to be stored 
     ntiles = [2, 4, 16, 64]
@@ -144,7 +146,8 @@ if __name__ == "__main__":
 
     tiff = grib_to_tiff(gribfile, "mapnik/data.tiff")
 
-    visualize_tiles(tiff, TILESDIR)
+    #visualize_tiles(tiff, options.variable, TILESDIR)
+    visualize_tiles(tiff, options.variable, f"{TILESDIR}/{options.variable}/{options.year:04d}{options.month:02d}")
 
 
     # Delete temporary directory after processing
