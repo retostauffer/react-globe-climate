@@ -2,3 +2,7 @@
 
 /*.zip
 /_data
+/_test*
+/_tiles
+/webgl-earth
+/*.swp

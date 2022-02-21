@@ -9,20 +9,14 @@
 to download monthly anomalies over the past years. Will be stored in `_data` (not
 under version control).
 
+## Checking Limits
 
-## React app
+To prepare the xml files for visualizing the data via `mapnik` (python)
+we need to figure out the limits we need for the color maps and create them.
 
-`react-globe-climate` is based on `react-globe` to display an interactive globe using
-react/webGL. To get it running it should be enough to:
+* `check_limits.R`: Analizes the grib files located in `_data` to get
+    the limits. Outputs the limits .. (?)
 
-```
-cd react-globe-climate && \
-npm install \
-npm run start
-```
-
-... to start a development instance on port 3000. `npm run build` prepares the
-optimized version for publication.
 
 ### Directories
 
