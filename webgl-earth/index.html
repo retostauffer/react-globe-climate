@@ -1,30 +1,49 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <script src="js/webgl-earth.js"></script>
-    <script>
-      function initialize() {
-        var earth = new WE.map('earth_div');
-          var domain = window.location.origin
-          var pathname = window.location.pathname
-          if (pathname == "/") {
-              pathname = ""
-          }
-          // zoom, x and y. Structure?
-          //WE.tileLayer(domain + pathname + "/tiles/{z}/{x}/{y}.png",{
-          WE.tileLayer(domain + pathname + "/tiles/{z}/{x}/{y}.png",{
-          attribution: '© OpenStreetMap contributors'
-        }).addTo(earth);
-      }
-    </script>
-    <style>
-      html, body{ padding: 0; margin: 0; }
-      body { background-color: black; }
-      #earth_div{top: 0; right: 0; bottom: 0; left: 0; position: absolute !important;}
-    </style>
+      <script src="js/webgl-earth.js"></script>
+      <script src="node_modules/jquery/dist/jquery.min.js"></script>
+      <script src="js/era5.js"></script>
+      <style>
+        html, body{ padding: 0; margin: 0; }
+        body { background-color: black; }
+        #earth_div{top: 0; right: 0; bottom: 0; left: 0; position: absolute !important;}
+
+        #earth_nav {
+            position: absolute;
+            display: block;
+            left: 0px;
+            right: 0px;
+            z-index: 100;
+            border: 1px solid orange;
+            min-width: 300px;
+            width: 20%;
+            min-height: 100%;
+            background-color: black;
+        }
+        #earth_nav ul li {
+            list-style: none;
+            color: white;
+        }
+        #earth_nav ul li:hover {
+            cursor: pointer;
+            color: gray;
+        }
+      </style>
     <title>WebGL Earth API: Hello World</title>
   </head>
-  <body onload="initialize()">
+  <body>
+    <div id="earth_nav">
+        <ul id="product">
+            <li product="2t">2t</li>
+        </ul>
+        <ul id="yearmon">
+            <li val="201910">2019-10</li>
+            <li val="202010">2020-10</li>
+            <li val="202110">2021-10</li>
+        </ul>
+    </div>
+    <!-- the globe itself -->
     <div id="earth_div"></div>
   </body>
 </html>
