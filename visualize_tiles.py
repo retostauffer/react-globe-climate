@@ -117,6 +117,7 @@ if __name__ == "__main__":
 
     if options.year is None or options.month is None or options.variable is None:
         parser.print_help()
+        sys.exit(666)
 
     # Name of the file to be considered
     zipfile = f"{DATADIR}/{options.year:04d}_all.zip"

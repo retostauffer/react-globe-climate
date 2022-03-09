@@ -23,8 +23,8 @@ if __name__ == "__main__":
     #bbox = mapnik.Box2d(mapnik.Coord(0, 0), mapnik.Coord(2048, 1024))
     bbox = mapnik.Box2d(mapnik.Coord(-20026376.39, -20048966.10),
                         mapnik.Coord(20026376.39, 20048966.10))
-    m.zoom_to_box(bbox) 
-    mapnik.render_to_file(m, 'world_population.png', 'png')
+    #m.zoom_to_box(bbox) 
+    #mapnik.render_to_file(m, 'world_population.png', 'png')
 
     mlim = dict(xmin = -20026376.39,
                 xmax = 20026376.39,
