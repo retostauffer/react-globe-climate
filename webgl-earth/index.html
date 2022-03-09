@@ -29,6 +29,9 @@
             cursor: pointer;
             color: gray;
         }
+        #earth_nav ul li.active {
+            color: red;
+        }
       </style>
     <title>WebGL Earth API: Hello World</title>
   </head>
@@ -36,9 +39,10 @@
     <div id="earth_nav">
         <ul id="product">
             <li product="2t">2t</li>
+            <li product="test">test</li>
         </ul>
         <ul id="yearmon">
-            <li val="201910">2019-10</li>
+            <li val="201910" class="active">2019-10</li>
             <li val="202010">2020-10</li>
             <li val="202110">2021-10</li>
         </ul>
