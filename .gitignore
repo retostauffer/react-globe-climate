@@ -4,6 +4,5 @@
 /_data
 /_test*
 /_tiles
-/webgl-earth
 /*.swp
 /all_limits.rds
