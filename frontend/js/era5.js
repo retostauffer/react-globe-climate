@@ -5,8 +5,36 @@
 
 window.earth = false;
 window.layer = false;
+window.markers = false;
 
 (function($){
+
+    $.fn.add_markers = function() {
+        $.ajax({
+            type: "GET",
+            url: "../locations.xml",
+            dataType: "xml",
+            success: function(xml) {
+                window.markers = $(xml).find("city");
+                $.each($(xml).find("city"), function(k, v) {
+                    var geo = [parseFloat($(v).find("lat").text()),
+                               parseFloat($(v).find("lon").text())];
+                    var name = $(v).find("name").text();
+                    var country = $(v).find("country").text();
+
+                    /* Generate marker */
+                    var m = WE.marker(geo)
+                    var elem = $(m.element).find(".we-pm-icon");
+                    $(elem).attr("name", name).attr("country", country);
+                    m.addTo(window.earth);
+                });
+            },
+            error: function() {
+                alert("Ups, problems loading locations.xml");
+            }
+        });
+    }
+
 
 
     /* Marker interaction */
@@ -67,6 +95,7 @@ window.layer = false;
                                       tilting = false,
                                       zooming = true);
             // Appending markers
+            $.fn.add_markers();
             var marker = WE.marker([0, 0]);
             $(marker.element).find(".we-pm-icon").attr("marker_id", 10);
             marker.addTo(earth);
@@ -103,8 +132,7 @@ window.layer = false;
     }
 
     $(document).on("click", ".we-pm-icon", function() {
-        console.log($(this));
-        alert($(this).attr("marker_id"));
+        alert($(this).attr("name"));
     });
 
     // On document ready: Initialize globe
@@ -114,7 +142,6 @@ window.layer = false;
         $.fn.init_navigation_months();
 
         var product = $.fn.get_product()
-        console.log(product)
 
         /* Adjust earth-div-wrapper first */
         $("#earth-div-wrapper").animate({"height": window.innerHeight + "px"}, 0, function() {
