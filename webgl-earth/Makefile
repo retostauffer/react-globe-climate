@@ -7,8 +7,8 @@ dev:
 
 publish:
 	scp index.html globe@eeecon.uibk.ac.at:~/public_html
-	rsync -va js globe@eeecon.uibk.ac.at:~/public_html/
-	rsync -va tiles globe@eeecon.uibk.ac.at:~/public_html/
+	rsync -vaL js globe@eeecon.uibk.ac.at:~/public_html/
+	rsync -vak tiles globe@eeecon.uibk.ac.at:~/public_html/
 
 
 npm:
