@@ -26,7 +26,17 @@ window.layer = false;
 
     $.fn.initialize_globe = function(product, position, zoom) {
         if (window.earth === false) {
-            window.earth = new WE.map('earth_div');
+            window.earth = new WE.map('earth_div',
+                                      atmosphere = true,
+                                      draggin = true,
+                                      tilting = false,
+                                      zooming = true);
+            // Appending markers
+            var marker = WE.marker([0, 0]).addTo(earth);
+            WE.marker([10, 10]).addTo(earth);
+            WE.marker([20, 20]).addTo(earth);
+            window.marker = marker
+            //marker.bindPopup("<b>Innschpruck</b>");
         }
 
         var domain   = window.location.origin

@@ -1,6 +1,6 @@
 
 
-# React globe for DiSC demo
+# WebGL globe for DiSC demo
 
 
 ## Downloading data
@@ -23,12 +23,31 @@ we need to figure out the limits we need for the color maps and create them.
     are later displayed on the web interface.
 
 
-### Directories
+# Directories
 
 * `_data`: Contains a series of ZIP archives with the GRIB files downloaded
     from Copernicus CDS (handled by `download_anomalies.py`).
 * `mapnik`: Contains mapnik (python) config files and some code (lib).
 * `_tiles`: Stores tiles and images for the interface.
-* `webgl-earth`: Contains the frontend related stuff.
+* `frontend`: Contains the frontend related stuff (`webglearth`, `jquery`, ...).
+
+# Frontend
+
+The `frontend` folder contains `package.json` to build the js dependencies.
+Simply run `npm install` for installation (jquery, bootstrap). This will
+download source and builds and store it in `node_modules`.
+
+For practical reasons (syncing to external machine) I am linking a series
+of `.js` and `.css` files into the corresponding folders `js` and `css`.
+Make sure they do exist:
+
+* In `js`:
+    * `bootstrap.min.js -> ../node_modules/bootstrap/dist/js/bootstrap.min.js`
+    * `bootstrap.min.js.map -> ../node_modules/bootstrap/dist/js/bootstrap.min.js.map`
+    * `jquery.min.js -> ../node_modules/jquery/dist/jquery.min.js`
+* In `css`
+    * `bootstrap.min.css -> ../node_modules/bootstrap/dist/css/bootstrap.min.css`
+    * `bootstrap.min.css.map -> ../node_modules/bootstrap/dist/css/bootstrap.min.css.map`
+
 
 

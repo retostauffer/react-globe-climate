@@ -1,0 +1,8 @@
+
+
+# Force add them if you need more
+# 
+# Alongside the .ttf we need the woff file, simply:
+#     sfnt2woff <name_of.ttf>
+# ... sfnt2woff comes with woff-tools (linux package)
+/*.ttf
