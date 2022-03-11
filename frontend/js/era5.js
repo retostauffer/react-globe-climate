@@ -8,6 +8,44 @@ window.layer = false;
 
 (function($){
 
+
+    /* Marker interaction */
+    $.fn.init_navigation_years = function() {
+        var target = $("#years");
+        for (i = 1979; i < 2022; i++) {
+            $("<option value=\"" + i + "\">" + i + "</option>").appendTo(target);
+        }
+        $(target).find("option:last-child").prop("selected", true);
+        /* Adding functionality */
+        $(target).change(function(x) {
+            $.fn.initialize_globe($.fn.get_product(), false, false);
+        });
+    };
+
+    $.fn.init_navigation_months = function() {
+        var vals = ["JAN", "FEB", "MAR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        var target = $("#months");
+        for (i = 0; i < vals.length; i++) {
+            $("<li value=\"" + (i + 1) + "\">" + vals[i] + "</li>").appendTo(target);
+        }
+        $(target).find("li[value='10']").addClass("active");
+        console.log("months fertig")
+        /* Functionality */
+        $("#months li").click(function() {
+            var oval = $("#months li.active").prop("value");
+            var nval = $(this).prop("value");
+            if (oval != nval) {
+                $("#months li.active").removeClass("active");
+                $(this).addClass("active");
+                $.fn.initialize_globe($.fn.get_product(), false, false);
+            }
+        });
+
+        $(target).change(function(x) {
+            $.fn.initialize_globe($.fn.get_product(), false, false);
+        });
+    }
+
     $.fn.get_product = function() {
         var prod = $("ul#product li.active").attr("product")
         if (prod === undefined) {
@@ -15,26 +53,32 @@ window.layer = false;
             prod = $(tmp).attr("product")
             $(tmp).addClass("active")
         }
-        var ymon = $("ul#yearmon li.active").attr("val")
-        if (ymon === undefined) {
-            var tmp = $("ul#yearmon li:first-child")
-            ymon = $(tmp).attr("val")
-            $(tmp).addClass("active")
-        }
-        return(prod + "/" + ymon)
+        var year = $("#years").val();
+        var mon  = parseInt($("#months > li.active").prop("value"));
+        if (mon < 10) { mon = "0" + mon; }
+        return(prod + "/" + year + mon);
     }
 
     $.fn.initialize_globe = function(product, position, zoom) {
         if (window.earth === false) {
-            window.earth = new WE.map('earth_div',
+            window.earth = new WE.map('earth-div',
                                       atmosphere = true,
                                       draggin = true,
                                       tilting = false,
                                       zooming = true);
             // Appending markers
-            var marker = WE.marker([0, 0]).addTo(earth);
-            WE.marker([10, 10]).addTo(earth);
-            WE.marker([20, 20]).addTo(earth);
+            var marker = WE.marker([0, 0]);
+            $(marker.element).find(".we-pm-icon").attr("marker_id", 10);
+            marker.addTo(earth);
+
+            var m2 = WE.marker([10, 10]);
+            $(m2.element).find(".we-pm-icon").attr("marker_id", 222);
+            var m3 = WE.marker([20, 20]);
+            $(m3.element).find(".we-pm-icon").attr("marker_id", 333);
+            m2.addTo(earth);
+            m3.addTo(earth);
+
+
             window.marker = marker
             //marker.bindPopup("<b>Innschpruck</b>");
         }
@@ -58,14 +102,27 @@ window.layer = false;
         return earth
     }
 
+    $(document).on("click", ".we-pm-icon", function() {
+        console.log($(this));
+        alert($(this).attr("marker_id"));
+    });
+
     // On document ready: Initialize globe
     $(document).ready(function() {
 
-        var product = $.fn.get_product()
+        $.fn.init_navigation_years();
+        $.fn.init_navigation_months();
 
+        var product = $.fn.get_product()
         console.log(product)
-        earth = $.fn.initialize_globe(product, position = [47.5, 11.3], zoom = 2)
-        console.log("Current zoom:" + earth.getZoom())
+
+        /* Adjust earth-div-wrapper first */
+        $("#earth-div-wrapper").animate({"height": window.innerHeight + "px"}, 0, function() {
+            $("#earth-div").animate({"height": "100%", "width": "100%"}, 0, function() {
+            earth = $.fn.initialize_globe(product, position = [47.5, 11.3], zoom = 2)
+            });
+
+        });
 
         // Manual navigation to change the product
         $("#product li").on("click", function(x) {

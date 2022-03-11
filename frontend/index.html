@@ -14,15 +14,12 @@
         html, body{ padding: 0; margin: 0; }
         body {
             background-color: black;
+            /*
             font-family: "Roboto", courier, sans-serif;
             font-weight: 400;
+            */
         }
-
-        #earth_div{
-            top: 0; right: 0; bottom: 0; left: 0; position: absolute !important;
-        }
-
-        #earth_nav {
+        #earth-nav {
             position: absolute;
             display: block;
             left: 0px;
@@ -34,37 +31,46 @@
             min-height: 100%;
             background-color: black;
         }
-        #earth_nav ul li {
+        #earth-nav ul li {
             list-style: none;
             color: white;
         }
-        #earth_nav ul li:hover {
+        #earth-nav ul li:hover {
             cursor: pointer;
             color: gray;
         }
-        #earth_nav ul li.active {
+        #earth-nav ul li.active {
             color: red;
+        }
+
+        /* Container for the globe */
+        #earth-div-wrapper {
+            z-index:100;
+            margin-left: 300px;
+            border: 3px solid red;
+        }
+        #earth-div{
+            /* top: 0; right: 0; bottom: 0; left: 0; position: absolute !important; */
         }
       </style>
     <title>ERA5 Visualization</title>
   </head>
   <body>
-    <div id="earth_nav">
-        <ul id="product">
-            <li product="2t" class="active">Temperatur</li>
-            <li product="tp">Niederschlag</li>
-            <li product="ci">Meereseis</li>
-            <li product="swvl1">Bodenfeuchte (7cm)</li>
-
-        </ul>
-        <ul id="yearmon">
-            <li val="198201">1982-01</li>
-            <li val="201910" class="active">2019-10</li>
-            <li val="202010">2020-10</li>
-            <li val="202110">2021-10</li>
-        </ul>
-    </div>
-    <!-- the globe itself -->
-    <div id="earth_div"></div>
+      <div class="container-fluid">
+        <div id="earth-nav">
+            <ul id="product">
+                <li product="2t" class="active">Temperatur</li>
+                <li product="tp">Niederschlag</li>
+                <li product="ci">Meereseis</li>
+                <li product="swvl1">Bodenfeuchte (7cm)</li>
+            </ul>
+            <select id="years"></select>
+            <ul id="months"></ul>
+        </div>
+        <!-- the globe itself -->
+        <div id="earth-div-wrapper">
+            <div id="earth-div"></div>
+        </div>
+      </div>
   </body>
 </html>
