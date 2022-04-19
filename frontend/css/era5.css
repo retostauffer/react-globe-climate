@@ -1,0 +1,60 @@
+html, body{ padding: 0; margin: 0; }
+body {
+    background-color: black;
+    /*
+    font-family: "Roboto", courier, sans-serif;
+    font-weight: 400;
+    */
+}
+
+/* Reload button */
+#page-reload {
+    position: absolute;
+    padding: 10px;
+    z-index: 100;
+    right: 10px;
+    top: 10px;
+    background: #262626;
+    background-image: url("../images/icon-recycle.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+
+/* Left hand side navigation for dates and parameters */
+#param-panel {
+    position: absolute;
+    display: block;
+    left: 0px;
+    right: 0px;
+    z-index: 100;
+    border: 1px solid orange;
+    min-width: 300px;
+    width: 20%;
+    min-height: 100%;
+    background-color: black;
+}
+#param-panel ul li {
+    list-style: none;
+    color: white;
+}
+#param-panel ul li:hover {
+    cursor: pointer;
+    color: gray;
+}
+#param-panel ul li.active {
+    color: red;
+}
+
+/* Container for the globe */
+#earth-div-wrapper {
+    z-index:100;
+    margin-left: 300px;
+    border: 3px solid red;
+}
+#earth-div{
+    /* top: 0; right: 0; bottom: 0; left: 0; position: absolute !important; */
+}

@@ -1,0 +1,19 @@
+﻿
+
+.sparkling-modal-overlay {
+    background: black;
+}
+.sparkling-modal-frame {
+    background: black;
+    color: white;
+}
+.sparkling-modal-title {
+    background: #262626;
+}
+.i-close-h { position: absolute; }
+.i-close-h, .i-close-v {
+    background: white;
+}
+.sparkling-modal-close:hover .i-close-h, .sparkling-modal-close:hover .i-close-v {
+    background: red;
+}
