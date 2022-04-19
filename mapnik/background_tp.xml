@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map background-color="#666666" srs="+init=epsg:3857">
+  <Style name="total_precipitation">
+    <Rule>
+      <RasterSymbolizer opacity="1" scaling="bilinear" mode="normal">
+        <RasterColorizer default-mode="discrete" default-color="yellow">
+          <stop color="#2686A0" value="-0.1078"/>
+          <stop color="#3D979E" value="-0.0702"/>
+          <stop color="#60A69E" value="-0.0425"/>
+          <stop color="#83B3A2" value="-0.0233"/>
+          <stop color="#A4BFAD" value="-0.011"/>
+          <stop color="#C0CBBE" value="-0.004"/>
+          <stop color="#D3DBC2" value="-9e-04"/>
+          <stop color="#EDEAC2" value="0"/>
+          <stop color="#E1D8AB" value="0"/>
+          <stop color="#D6C695" value="9e-04"/>
+          <stop color="#CBB47F" value="0.004"/>
+          <stop color="#C1A16A" value="0.011"/>
+          <stop color="#B78F55" value="0.0233"/>
+          <stop color="#AD7D40" value="0.0425"/>
+          <stop color="#A36B2B" value="0.0702"/>
+          <stop color="yellow" value="0.1078"/>
+        </RasterColorizer>
+      </RasterSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="total_precipitation" srs="+init=epsg:3857">
+    <StyleName>total_precipitation</StyleName>
+    <Datasource>
+      <Parameter name="type">gdal</Parameter>
+      <Parameter name="file">data.tiff</Parameter>
+      <Parameter name="band">1</Parameter>
+    </Datasource>
+  </Layer>
+</Map>

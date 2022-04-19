@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map background-color="#666666" srs="+init=epsg:3857">
+  <Style name="sea_ice_fraction">
+    <Rule>
+      <RasterSymbolizer opacity="1" scaling="bilinear" mode="normal">
+        <RasterColorizer default-mode="discrete" default-color="yellow">
+          <stop color="#743700" value="-1"/>
+          <stop color="#9C5400" value="-0.7511"/>
+          <stop color="#C57100" value="-0.5378"/>
+          <stop color="#E68F2C" value="-0.36"/>
+          <stop color="#FCAD6D" value="-0.2178"/>
+          <stop color="#FFCA9D" value="-0.1111"/>
+          <stop color="#FFE3C7" value="-0.04"/>
+          <stop color="#F9F9F9" value="-0.0044"/>
+          <stop color="#E5E4EB" value="0.0044"/>
+          <stop color="#C8C6DA" value="0.04"/>
+          <stop color="#A8A4C7" value="0.1111"/>
+          <stop color="#857FB4" value="0.2178"/>
+          <stop color="#6257A3" value="0.36"/>
+          <stop color="#3E3279" value="0.5378"/>
+          <stop color="#1C0D51" value="0.7511"/>
+          <stop color="yellow" value="1"/>
+        </RasterColorizer>
+      </RasterSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="sea_ice_fraction" srs="+init=epsg:3857">
+    <StyleName>sea_ice_fraction</StyleName>
+    <Datasource>
+      <Parameter name="type">gdal</Parameter>
+      <Parameter name="file">data.tiff</Parameter>
+      <Parameter name="band">1</Parameter>
+    </Datasource>
+  </Layer>
+</Map>

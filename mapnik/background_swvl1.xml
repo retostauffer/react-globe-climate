@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map background-color="#666666" srs="+init=epsg:3857">
+  <Style name="volumetric_soil_water">
+    <Rule>
+      <RasterSymbolizer opacity="1" scaling="bilinear" mode="normal">
+        <RasterColorizer default-mode="discrete" default-color="yellow">
+          <stop color="#F5191C" value="-0.6"/>
+          <stop color="#ED5300" value="-0.4704"/>
+          <stop color="#E97000" value="-0.3541"/>
+          <stop color="#E78500" value="-0.2518"/>
+          <stop color="#E79812" value="-0.1642"/>
+          <stop color="#E8A91B" value="-0.0927"/>
+          <stop color="#EABA21" value="-0.0389"/>
+          <stop color="#EACB2B" value="-0.006"/>
+          <stop color="#C1C88C" value="0.006"/>
+          <stop color="#A6C293" value="0.0389"/>
+          <stop color="#8BBD94" value="0.0927"/>
+          <stop color="#6CB799" value="0.1642"/>
+          <stop color="#4CAFA1" value="0.2518"/>
+          <stop color="#37A5AA" value="0.3541"/>
+          <stop color="#3B99B1" value="0.4704"/>
+          <stop color="yellow" value="0.6"/>
+        </RasterColorizer>
+      </RasterSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="volumetric_soil_water" srs="+init=epsg:3857">
+    <StyleName>volumetric_soil_water</StyleName>
+    <Datasource>
+      <Parameter name="type">gdal</Parameter>
+      <Parameter name="file">data.tiff</Parameter>
+      <Parameter name="band">1</Parameter>
+    </Datasource>
+  </Layer>
+</Map>
