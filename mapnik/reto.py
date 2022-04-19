@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-
-
-
 import mapnik
 import sys
 import os

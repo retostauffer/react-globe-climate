@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <capitals>
   <city>
+      <name>Innsbruck</name>
+      <country>Austria</country>
+      <lon>11.393333</lon>
+      <lat>47.268333</lat>
+  </city>
+  <city>
     <name>Algiers</name>
     <country>Algeria</country>
     <lon>3.04</lon>

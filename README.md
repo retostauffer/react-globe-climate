@@ -9,6 +9,8 @@
 to download monthly anomalies over the past years. Will be stored in `_data` (not
 under version control).
 
+* <https://cds.climate.copernicus.eu/cdsapp#!/dataset/ecv-for-climate-change?tab=form>
+
 ## Generate color maps given limits
 
 To prepare the XML files for mapnik to visualize the data

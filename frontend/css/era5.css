@@ -49,12 +49,31 @@ body {
     color: red;
 }
 
+/* Colormap panel */
+#colormap-panel {
+    position: absolute;
+    display: block;
+    right: 0px;
+    bottom: 0px;
+    z-index: 100;
+    border: 1px solid yellow;
+    min-width: 300px;
+    width: 800px;
+    min-height: 30px;
+    background-color: black;
+    padding: 2px 10px;
+}
+#colormap-panel img {
+    max-width: 100%;
+}
+
 /* Container for the globe */
 #earth-div-wrapper {
     z-index:100;
     margin-left: 300px;
     border: 3px solid red;
 }
+
 #earth-div{
     /* top: 0; right: 0; bottom: 0; left: 0; position: absolute !important; */
 }

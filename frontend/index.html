@@ -9,55 +9,20 @@
 
       <link href="css/bootstrap.min.css" rel="stylesheet" />
       <link href="css/font.css" rel="stylesheet" />
+      <link href="css/era5.css" rel="stylesheet" />
 
-      <style>
-        html, body{ padding: 0; margin: 0; }
-        body {
-            background-color: black;
-            /*
-            font-family: "Roboto", courier, sans-serif;
-            font-weight: 400;
-            */
-        }
-        #earth-nav {
-            position: absolute;
-            display: block;
-            left: 0px;
-            right: 0px;
-            z-index: 100;
-            border: 1px solid orange;
-            min-width: 300px;
-            width: 20%;
-            min-height: 100%;
-            background-color: black;
-        }
-        #earth-nav ul li {
-            list-style: none;
-            color: white;
-        }
-        #earth-nav ul li:hover {
-            cursor: pointer;
-            color: gray;
-        }
-        #earth-nav ul li.active {
-            color: red;
-        }
+      <link href="css/jquery.modalLink-1.0.0.css" rel="stylesheet" />
+      <link href="css/jquery.modalLink-era5.css" rel="stylesheet" />
+      <script src="js/jquery.modalLink-1.0.0.js"></script>
 
-        /* Container for the globe */
-        #earth-div-wrapper {
-            z-index:100;
-            margin-left: 300px;
-            border: 3px solid red;
-        }
-        #earth-div{
-            /* top: 0; right: 0; bottom: 0; left: 0; position: absolute !important; */
-        }
-      </style>
     <title>ERA5 Visualization</title>
   </head>
   <body>
       <div class="container-fluid">
-        <div id="earth-nav">
+        <!-- page reload/reset button -->
+        <div id="page-reload"></div>
+        <!-- Left-hand side navigation for parameters and dates -->
+        <div id="param-panel" class="navigation-left">
             <ul id="product">
                 <li product="2t" class="active">Temperatur</li>
                 <li product="tp">Niederschlag</li>
@@ -66,6 +31,10 @@
             </ul>
             <select id="years"></select>
             <ul id="months"></ul>
+        </div>
+        <!-- Colormap -->
+        <div id="colormap-panel" class="navigation-colormap">
+            ... color map will be placed dynamically ...
         </div>
         <!-- the globe itself -->
         <div id="earth-div-wrapper">

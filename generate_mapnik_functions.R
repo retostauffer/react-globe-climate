@@ -86,3 +86,62 @@ generate_background_xml <- function(colors, breaks, name, default_col = "yellow"
 }
 
 
+#' Create SVG Color Legend for Frontend
+#'
+#' @param bk numeric, breaks used to generate the XML file (breaks for the colors)
+#' @param col vector of colors, length must be \code{length(bk) - 1}.
+#' @param title character length 1, used to set the title.
+#' @param ref character length 1 (reference), defaults to \code{"Referenzperiode: 1991-2020"}.
+#' @param bg background color, length 1, defaults to black.
+#' @param axcol color of the axis, length 1, defaults to white.
+#'
+#' @return Performs plotting, no return.
+#'
+#' @author Reto Stauffer
+#' @export
+draw_color_legend <- function(bk, col, title, ref = "Referenzperiode: 1991-2020", bg = "black", axcol = "white") {
+    stopifnot(is.numeric(bk), length(bk) - 1 == length(col))
+    stopifnot(is.character(title), length(title) == 1)
+    stopifnot(is.character(ref), length(ref) == 1)
+    stopifnot(length(bg) == 1)
+    stopifnot(length(axcol) == 1)
+
+    #hold <- par(no.readonly = TRUE); on.exit(par(hold))
+    par(mar = c(1.5, 0.2, 1.5, 0.2), xaxs = "i", yaxs = "i", bty = "n", bg = bg)
+    plot(NA, xlim = sort(range(bk)), ylim = c(0, 1),
+         xaxt = "n", yaxt = "n", xlab = NA, ylab = NA)
+    lines(c(0,1), c(0,1))
+    offset <- diff(range(bk)) / 1000
+    for (i in seq_along(col)) {
+        rect(bk[i] - offset, 0, bk[i + 1] + offset, 1, col = col[i], border = NA)
+    }
+    axis(side = 1, line = -0.8, at = pretty(bk, 11), lwd = 0, col = "white", col.ticks = NA, col.axis = axcol)
+    #axis(side = 1, at = pretty(bk, 11), col = axcol, col.ticks = axcol, col.axis = axcol)
+    par(bty = "o"); box(lty = 1, lwd = 2, col = axcol)
+    mtext(side = 3, line = 0.1, at = min(bk), adj = 0, title, col = axcol, cex = 1.2)
+    mtext(side = 3, line = 0.1, at = max(bk), adj = 1, ref, col = "gray50", cex = 1.2)
+}
+
+draw_color_legend2 <- function(bk, col, title, digits = 2, ref = "Referenzperiode: 1991-2020", bg = "black", axcol = "white") {
+    stopifnot(is.numeric(bk), length(bk) - 1 == length(col))
+    stopifnot(is.character(title), length(title) == 1)
+    stopifnot(is.character(ref), length(ref) == 1)
+    stopifnot(length(bg) == 1)
+    stopifnot(length(axcol) == 1)
+
+    #par(mar = c(1.5, 0.2, 1.5, 0.2), xaxs = "i", yaxs = "i", bty = "n", bg = bg)
+    par(mar = c(1.5, 1, 1.5, 1), xaxs = "i", yaxs = "i", bty = "n", bg = bg)
+    plot(NA, xlim = c(0, 1), ylim = c(0, 1),
+         xaxt = "n", yaxt = "n", xlab = NA, ylab = NA)
+    lines(c(0,1), c(0,1))
+    offset <- 1 / 1000
+    xxx <- seq(0, 1, length.out = length(bk))
+    for (i in seq_along(col)) {
+        rect(xxx[i] - offset, 0, xxx[i + 1] + offset, 1, col = col[i], border = NA)
+    }
+    axis(side = 1, line = -0.8, at = xxx, labels = sprintf(paste("%.", digits, "f", sep = ""), bk),
+         lwd = 0, col = "white", col.ticks = NA, col.axis = axcol)
+    par(bty = "o"); box(lty = 1, lwd = 2, col = axcol)
+    mtext(side = 3, line = 0.1, at = 0, adj = 0, title, col = axcol, cex = 1.2)
+    mtext(side = 3, line = 0.1, at = 1, adj = 1, ref, col = "gray50", cex = 1.2)
+}

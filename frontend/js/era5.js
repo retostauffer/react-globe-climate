@@ -23,9 +23,10 @@ window.markers = false;
                     var country = $(v).find("country").text();
 
                     /* Generate marker */
-                    var m = WE.marker(geo)
+                    var m = WE.marker(geo);
                     var elem = $(m.element).find(".we-pm-icon");
                     $(elem).attr("name", name).attr("country", country);
+                    $(elem).attr("style", "background-image: url('../marker-icon.svg'); height: 10px; width: 10px; margin-left: 5px; margin-top: -5px;")
                     m.addTo(window.earth);
                 });
             },
@@ -57,7 +58,6 @@ window.markers = false;
             $("<li value=\"" + (i + 1) + "\">" + vals[i] + "</li>").appendTo(target);
         }
         $(target).find("li[value='10']").addClass("active");
-        console.log("months fertig")
         /* Functionality */
         $("#months li").click(function() {
             var oval = $("#months li.active").prop("value");
@@ -74,7 +74,7 @@ window.markers = false;
         });
     }
 
-    $.fn.get_product = function() {
+    $.fn.get_product = function(yearmon = true) {
         var prod = $("ul#product li.active").attr("product")
         if (prod === undefined) {
             var tmp = $("ul#product li:first-child")
@@ -84,7 +84,11 @@ window.markers = false;
         var year = $("#years").val();
         var mon  = parseInt($("#months > li.active").prop("value"));
         if (mon < 10) { mon = "0" + mon; }
-        return(prod + "/" + year + mon);
+        if (yearmon) {
+            return(prod + "/" + year + mon);
+        } else {
+            return(prod);
+        }
     }
 
     $.fn.initialize_globe = function(product, position, zoom) {
@@ -107,7 +111,6 @@ window.markers = false;
             m2.addTo(earth);
             m3.addTo(earth);
 
-
             window.marker = marker
             //marker.bindPopup("<b>Innschpruck</b>");
         }
@@ -128,11 +131,43 @@ window.markers = false;
         // Setting position and zoom if required/requested
         if (position !== false) { window.earth.setPosition(position[0], position[1]); }
         if (zoom !== false)     { window.earth.setZoom(zoom) };
+
+        // Replace colormap
+        var panel = $("#colormap-panel");
+        $(panel).empty()
+        $("<img src=\"images/legend_" + $.fn.get_product(false) + ".svg\" />").appendTo(panel)
+
         return earth
     }
 
+    // Adjusting width of the 'detail panel'.
+    // Default is 500px; we here change the CSS to 70% of window width.
+    // Must also be triggered on window resize.
+    $.fn.adjust_detail_panel_width = function() {
+        var width = Math.round(parseFloat($(window).width()) / 2) + "px";
+        $("#detail-panel").css("width", width);
+        console.log(width);
+    }
+
+    // Interactivity for clicking on a position marker on the map
     $(document).on("click", ".we-pm-icon", function() {
-        alert($(this).attr("name"));
+        var city = $(this).attr("name");
+        var width  = parseInt($(window).width()) - 200;
+        var height = parseInt($(window).height()) - 200;
+        $.modalLink.open("details.php", {
+            height: height, width: width,
+            overlayOpacity: 0.6, method: "POST",
+            title: city,
+            data: {"city": city }
+        });
+        // Center that thing; the plugin has a slight offset (20px); hardcoded
+        // adding another +40 to fix this.
+        $(".sparkling-modal-frame").css("margin-left", Math.round((width + 40) / -2) + "px");
+    });
+
+    // Reload button to reset view
+    $(document).on("click", "#page-reload", function() {
+        location.reload("true");
     });
 
     // On document ready: Initialize globe
@@ -141,7 +176,10 @@ window.markers = false;
         $.fn.init_navigation_years();
         $.fn.init_navigation_months();
 
-        var product = $.fn.get_product()
+        // Triggering adjustment of details panel
+        $.fn.adjust_detail_panel_width();
+
+        var product = $.fn.get_product();
 
         /* Adjust earth-div-wrapper first */
         $("#earth-div-wrapper").animate({"height": window.innerHeight + "px"}, 0, function() {

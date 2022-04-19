@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Map srs="+init=epsg:3857">
+<Map background-color="#666666" srs="+init=epsg:3857">
   <Style name="temperature">
     <Rule>
       <RasterSymbolizer opacity="1" scaling="bilinear" mode="normal">

@@ -59,6 +59,12 @@ t2m_breaks <- fn(length(t2m_colors), pow = 2, min(t2m_limits), max(t2m_limits))
 map <- generate_background_xml(t2m_colors, t2m_breaks, "temperature")
 write_xml(map, "mapnik/background_2t.xml")
 
+# Drawing legend
+svg(file = "frontend/images/legend_2t.svg", width = 10, height = 0.9, bg = "black")
+    draw_color_legend(t2m_breaks, t2m_colors, "Anomalie in Grad Celsius")
+dev.off()
+
+
 
 # --------------------------------------------------
 # Generate XML file for total precipitation / tp
@@ -78,9 +84,13 @@ plot(tp_breaks[-1], pch = 19, cex = 3, col = tp_colors)
 map <- generate_background_xml(tp_colors, tp_breaks, "total_precipitation")
 write_xml(map, "mapnik/background_tp.xml")
 
+# Drawing legend
+svg(file = "frontend/images/legend_tp.svg", width = 10, height = 0.9, bg = "black")
+    draw_color_legend2(tp_breaks * 1000, tp_colors, "Anomalie in mm/Tag")
+dev.off()
 
 # --------------------------------------------------
-# Generate XML file for total precipitation / tp
+# Generate XML file for sea ice
 # --------------------------------------------------
 ci <- subset(all_limits, variable == "ci")
 ci_limits <- c(-1, 1)
@@ -97,6 +107,10 @@ plot(ci_breaks[-1], pch = 19, cex = 3, col = ci_colors)
 map <- generate_background_xml(ci_colors, ci_breaks, "sea_ice_fraction")
 write_xml(map, "mapnik/background_ci.xml")
 
+# Drawing legend
+svg(file = "frontend/images/legend_ci.svg", width = 10, height = 0.9, bg = "black")
+    draw_color_legend2(ci_breaks * 100, ci_colors, "Anomalie, Prozent")
+dev.off()
 
 # --------------------------------------------------
 # Generate XML file for Volumetric soil water layer 1 (m^3/m^3) / swvl1
@@ -118,6 +132,10 @@ plot(swvl1_breaks[-1], pch = 19, cex = 3, col = swvl1_colors)
 map <- generate_background_xml(swvl1_colors, swvl1_breaks, "volumetric_soil_water")
 write_xml(map, "mapnik/background_swvl1.xml")
 
+# Drawing legend
+svg(file = "frontend/images/legend_swvl1.svg", width = 10, height = 0.9, bg = "black")
+    draw_color_legend2(swvl1_breaks, swvl1_colors, "Anomalie in Kubikmeter/Kubikmeter")
+dev.off()
 
 
 
