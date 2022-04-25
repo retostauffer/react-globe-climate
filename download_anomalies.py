@@ -67,5 +67,4 @@ for year in range(1979, 2022):
                 "10", "11", "12",
             ],
             'time_aggregation': '1_month_mean',
-        },
-        'download.zip')
+        }, outfile)

@@ -36,12 +36,12 @@ def grib_to_tiff(gribfile, outfile):
     TSRS = "EPSG:3857"
 
     CMD = ["gdal_translate", "-b", "1", "-a_srs", SSRS, gribfile, "-of", "Gtiff", tmpfile.name]
-    #print(" ".join(CMD) + "\n")
+    print(" ".join(CMD) + "\n")
     p = sub.Popen(CMD, stdout = sub.PIPE, stderr = sub.PIPE)
     out,err = p.communicate()
     if not p.returncode == 0: raise Exception(err)
 
-    CMD = ["gdalwarp", "-t_srs", TSRS, tmpfile.name, outfile]
+    CMD = ["gdalwarp", "-t_srs", TSRS, "-overwrite", tmpfile.name, outfile]
     p = sub.Popen(CMD, stdout = sub.PIPE, stderr = sub.PIPE)
     out,err = p.communicate()
     if not p.returncode == 0: raise Exception(err)
@@ -66,6 +66,7 @@ def visualize_tiles(tiff, variable, outdir):
     xmlfile = f"mapnik/background_{variable}.xml"
     if not os.path.isfile(xmlfile):
         raise Exception("Rquired file {xmlfile} does not exist.")
+    print(f"Using XML file {xmlfile}")
     mapnik.load_map(m, xmlfile)
     mapnik.load_map(m, "mapnik/world_population_mercator.xml")
 
