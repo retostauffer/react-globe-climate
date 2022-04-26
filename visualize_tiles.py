@@ -121,7 +121,7 @@ if __name__ == "__main__":
         sys.exit(666)
 
     # Name of the file to be considered
-    zipfile = f"{DATADIR}/{options.year:04d}_all.zip"
+    zipfile = f"{DATADIR}/{options.year:04d}_anomalies.zip"
     if not os.path.isfile(zipfile):
         raise Exception(f"Cannot find {zipfile} which is needed here.")
 

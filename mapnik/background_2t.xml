@@ -4,22 +4,22 @@
     <Rule>
       <RasterSymbolizer opacity="1" scaling="bilinear" mode="normal">
         <RasterColorizer default-mode="discrete" default-color="yellow">
-          <stop color="#023FA5" value="-22"/>
-          <stop color="#4D60A9" value="-16.52"/>
-          <stop color="#727EB5" value="-11.83"/>
-          <stop color="#9299C2" value="-7.92"/>
-          <stop color="#AEB2CD" value="-4.79"/>
-          <stop color="#C6C8D7" value="-2.44"/>
-          <stop color="#D8D9DE" value="-0.88"/>
-          <stop color="#E2E2E2" value="-0.1"/>
-          <stop color="#DFD7D9" value="0.1"/>
-          <stop color="#D9C4C7" value="0.88"/>
-          <stop color="#D0AAB1" value="2.44"/>
-          <stop color="#C48D97" value="4.79"/>
-          <stop color="#B56B7A" value="7.92"/>
-          <stop color="#A3445C" value="11.83"/>
-          <stop color="#8E063B" value="16.52"/>
-          <stop color="yellow" value="22"/>
+          <stop color="yellow" value="-22"/>
+          <stop color="#023FA5" value="-16.52"/>
+          <stop color="#4D60A9" value="-11.83"/>
+          <stop color="#727EB5" value="-7.92"/>
+          <stop color="#9299C2" value="-4.79"/>
+          <stop color="#AEB2CD" value="-2.44"/>
+          <stop color="#C6C8D7" value="-0.88"/>
+          <stop color="#D8D9DE" value="-0.1"/>
+          <stop color="#E2E2E2" value="0.1"/>
+          <stop color="#DFD7D9" value="0.88"/>
+          <stop color="#D9C4C7" value="2.44"/>
+          <stop color="#D0AAB1" value="4.79"/>
+          <stop color="#C48D97" value="7.92"/>
+          <stop color="#B56B7A" value="11.83"/>
+          <stop color="#A3445C" value="16.52"/>
+          <stop color="#8E063B" value="22"/>
         </RasterColorizer>
       </RasterSymbolizer>
     </Rule>

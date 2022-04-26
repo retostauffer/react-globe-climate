@@ -71,10 +71,10 @@ generate_background_xml <- function(colors, breaks, name, default_col = "yellow"
     rule <- xml_add_child(xml_add_child(map, "Style", name = name), "Rule")
     symbolizer <- xml_add_child(rule, "RasterSymbolizer", opacity = "1", scaling = "bilinear", mode = "normal")
     colorizer  <- xml_add_child(symbolizer, "RasterColorizer", "default-mode" = "discrete", "default-color" = default_col)
+    xml_add_child(colorizer, "stop", color = default_col, value = format(breaks[1]))
     for (i in seq_along(colors)) {
-        xml_add_child(colorizer, "stop", color = colors[i], value = format(breaks[i]))
+        xml_add_child(colorizer, "stop", color = colors[i], value = format(breaks[i + 1]))
     }
-    xml_add_child(colorizer, "stop", color = default_col, value = format(breaks[i+1]))
 
     layer <- xml_add_child(map, "Layer", name = name, srs = "+init=epsg:3857")
     xml_set_text(xml_add_child(layer, "StyleName"), name)
