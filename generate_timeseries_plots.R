@@ -12,71 +12,48 @@ rm(list = objects())
 
 Sys.setlocale("LC_TIME", "C")
 
+source("generate_timeseries_plots_functions.R")
+
+# ------------------------------------------------------------
+# Loading locations
+# ------------------------------------------------------------
 SQLITEDB <- "_data/interpolated.sqlite3"
 con <- dbConnect(SQLite(), SQLITEDB)
-
-get_locations <- function(con) {
-    stopifnot(inherits(con, "SQLiteConnection"))
-    res <- dbSendQuery(con, "SELECT * FROM locations")
-    data <- fetch(res); dbClearResult(res)
-    print(head(data))
-    return(data)
-}
-
 locations <- get_locations(con)
 
-get_data <- function(ID, con, what = c("anomaly", "monthlymean")) {
-    require("RSQLite")
-    require("zoo")
-
-    stopifnot(is.numeric(ID), length(ID) == 1)
-    stopifnot(inherits(con, "SQLiteConnection"))
-    what <- match.arg(what)
-
-    # Getting data
-    SQL <- sprintf("SELECT * FROM %s WHERE station_ID = %d", what, ID)
-    res <- dbSendQuery(con, SQL)
-    data <- fetch(res); dbClearResult(res)
-
-    # Renaming some things ...
-    renaming <- c("2t" = "t2m")
-    for (i in names(renaming)) data$param[data$param == i] <- renaming[[i]]
-    data <- transform(data, yearmon = as.yearmon(sprintf("%06d", yearmon), format = "%Y%m"), station_ID = NULL)
-    data <- as.data.frame(pivot_wider(data, names_from = "param", values_from = "value"))
-    data <- zoo(subset(data, select = -yearmon), data$yearmon)
-    names(data) <- paste(names(data), what, sep = "_")
-    return(data)
-}
-dim(tmp1 <- get_data(1, con, "anomaly"))
-dim(tmp2 <- get_data(1, con, "monthlymean"))
-data <- merge(tmp1, tmp2)
-data <- data[, sort(names(data))]
+# ------------------------------------------------------------
+# Loading data from database; monthly mean values alongside
+# with monthly anomalies (ref is always 1991-2020
+# ------------------------------------------------------------
+data <- get_data(1L, con)
 data <- transform(data, t2m_monthlymean = t2m_monthlymean - 273.15)
+head(data)
 
 class(data) <- c("era5_anom", class(data))
-#data$month <- as.integer(format(index(data), "%m"))
-#tab <- table(as.integer(format(seq(as.Date("2022-01-01"), as.Date("2022-12-31"), by = 1L), "%m")))
-#data$ndays <- as.integer(tab[match(as.character(data$month), names(tab))])
 
 
-library("xml2")
-doc <- read_xml("mapnik/background_2t.xml")
-nodes <- xml_find_all(doc, ".//RasterColorizer/stop")
-stop_col <- xml_attr(nodes, "color")
-stop_val <- as.numeric(xml_attr(nodes, "value"))
-(stops <- data.frame(col = stop_col, val = stop_val))
-clr <- as.character(cut(data$t2m_anomaly, breaks = c(-Inf, stops$val), stops$col))
-clr
+# ------------------------------------------------------------
+# Loading color-coding from the XML files used by mapnik
+# ------------------------------------------------------------
+(cmap_2t <- get_mapnik_colorcoding("mapnik/background_2t.xml"))
+(cmap_tp <- get_mapnik_colorcoding("mapnik/background_tp.xml"))
 
-cmap <- data.frame(color = stop_col, stop = stop_val)
-cmap
+color_2t <- as.character(cut(data$t2m_anomaly, breaks = c(-Inf, cmap_2t$stop), cmap_2t$color))
+color_tp <- as.character(cut(data$t2m_anomaly, breaks = c(-Inf, cmap_tp$stop), cmap_tp$color))
+head(color_2t)
+head(color_tp)
 
+
+
+# ------------------------------------------------------------
+# ------------------------------------------------------------
 
 # Adding annual mean
 add_annual_mean <- function(xa, cmap, type = c("r", "p"), ..., pch = 19, cex = 2) {
     type <- match.arg(type)
     annual <- aggregate(xa, format(index(xa), "%Y"), mean)
     annual_color <- as.character(cut(annual, breaks = cmap$stop, label = tail(cmap$color, -1), include.lowest = TRUE))
+    reto <<- list(annual = annual, color =annual_color)
     if (type == "r") {
         for (i in seq_along(annual)) {
             tmp <- yearmon(as.integer(index(annual[i])))
@@ -144,15 +121,25 @@ plot.era5_anom <- function(x, what, mcol, acol, main, mlab, alab, cmap, cmap2 = 
     for (iat in a_at) lines(xlim + c(0, 1) * diff(xlim), rep(iat, 2), col = "white", lty = 2)
 
     axis(side = 4, at = a_at, col.axis = acol)
-    reto <<- add_annual_mean(xa, cmap)
+    add_annual_mean(xa, cmap)
 
     # Adding monthly anomalies
     lines(xa, col = acol)
     mtext(side = 4, alab, line = 2.5, col = acol, at = 0)
 }
-plot(data, "t2m", "tomato", "white", cmap,
+
+#plot(data, "t2m", "tomato", "white", cmap_2t,
+xx <- cmap_2t
+xx$color[9] <- 'red'
+plot(data, "t2m", "tomato", "white", xx,
      main = "Lufttemperatur", mlab = "Durchschnittstemperatur [Grad C]", alab = "Anomalie [Grad C]",
      cmap2 = diverging_hcl(11, "Blue-Red 2"))
+plot(xx$stop, pch = 19, col = xx$color, cex = 5, ylim = c(-1, 1))
+barplot(xx$stop, col = xx$color)
+barplot(abs(xx$stop) + 5, col = xx$color)
+barplot(abs(cmap_2t$stop) + 5, col = cmap_2t$color)
+plot(cmap_2t$stop, pch = 19, col = cmap_2t$color, cex = 5, ylim = c(-1, 1))
+abline(h = c(-.1, 0, .1))
 
 reto
 dev.print(file = "~/Downloads/test_t2m.jpg", width = 1000, dev = jpeg)
