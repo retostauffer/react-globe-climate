@@ -7,5 +7,6 @@
 /_data
 /_test*
 /_tiles
+/_timeseries
 /*.swp
 /all_limits.rds

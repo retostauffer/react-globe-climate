@@ -72,14 +72,14 @@ dev.off()
 tp <- subset(all_limits, variable == "tp")
 tp_limits <- max(c(min(tp$min), max(tp$max))) * c(-1.01, 1.01)
 tp_colors <- hcl.colors(15, "Earth", rev = TRUE)
-fn <- function(n, pow = 1.5, lo = 0, hi = 1) {
+fn <- function(n, pow = 1.5, lo = 0, hi = 1, digits = 4) {
     stopifnot(n %% 2 == 1L) # Must be an odd number
     res <- seq(-1, 1, length.out = n + 1)
     res <- (abs(res)^pow * sign(res) + 1) / 2
-    return(round(lo + res * abs(hi - lo), digits = 4))
+    return(round(lo + res * abs(hi - lo), digits = digits))
 }
 ###fn(3, pow = 1, -1.5, 1.5) # test
-tp_breaks <- fn(length(tp_colors), pow = 3, min(tp_limits), max(tp_limits))
+tp_breaks <- fn(length(tp_colors), pow = 3, min(tp_limits), max(tp_limits), digits = 6)
 plot(tp_breaks[-1], pch = 19, cex = 3, col = tp_colors)
 map <- generate_background_xml(tp_colors, tp_breaks, "total_precipitation")
 write_xml(map, "mapnik/background_tp.xml")
