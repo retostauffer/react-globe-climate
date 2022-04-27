@@ -32,20 +32,20 @@ $args = $_POST;
         <a class="nav-link" data-bs-toggle="tab" href="#imgtp">Niederschlag</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#img3">Bodenwassergehalt</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#imgswvl1">Bodenwassergehalt</a>
       </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
       <div class="tab-pane container-fluid active" id="img2t">
-        <img src="timeseries/2t_Innsbruck_Austria.svg" alt="Innsbruck" />
+        <img src="timeseries/2t_<?php echo($args["city"]); ?>_<?php echo($args["country"]); ?>.svg" />
       </div>
       <div class="tab-pane container-fluid fade" id="imgtp">
-        FOO
+        <img src="timeseries/tp_<?php echo($args["city"]); ?>_<?php echo($args["country"]); ?>.svg" />
       </div>
-      <div class="tab-pane container-fluid fade" id="img3">
-            BAR
+      <div class="tab-pane container-fluid fade" id="imgswvl1">
+        <img src="timeseries/swvl1_<?php echo($args["city"]); ?>_<?php echo($args["country"]); ?>.svg" />
       </div>
     </div>
 

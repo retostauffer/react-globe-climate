@@ -151,13 +151,14 @@ window.markers = false;
     // Interactivity for clicking on a position marker on the map
     $(document).on("click", ".we-pm-icon", function() {
         var city = $(this).attr("name");
+        var country = $(this).attr("country");
         var width  = parseInt($(window).width()) - 200;
         var height = parseInt($(window).height()) - 200;
         $.modalLink.open("details.php", {
             height: height, width: width,
             overlayOpacity: 0.6, method: "POST",
             title: city,
-            data: {"city": city }
+            data: {"city": city, "country": country}
         });
         // Center that thing; the plugin has a slight offset (20px); hardcoded
         // adding another +40 to fix this.
