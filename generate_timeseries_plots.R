@@ -14,6 +14,9 @@ Sys.setlocale("LC_TIME", "C")
 
 source("generate_timeseries_plots_functions.R")
 
+SVGDIR = "_timeseries"
+if (!dir.exists(SVGDIR)) dir.create(SVGDIR)
+
 # ------------------------------------------------------------
 # Loading locations
 # ------------------------------------------------------------
@@ -25,7 +28,10 @@ locations <- get_locations(con)
 # Loading data from database; monthly mean values alongside
 # with monthly anomalies (ref is always 1991-2020
 # ------------------------------------------------------------
-data <- get_data(1L, con)
+station_ID <- 1
+station_info <- as.list(subset(locations, ID == station_ID))
+station_info$hash <- paste(station_info$name, station_info$country, sep = "_")
+data <- get_data(station_info$ID, con)
 data <- transform(data, t2m_monthlymean = t2m_monthlymean - 273.15)
 head(data)
 
@@ -65,7 +71,9 @@ add_annual_mean <- function(xa, cmap, type = c("r", "p"), ..., pch = 19, cex = 2
     invisible(data.frame(value = coredata(annual), index = index(annual), color = annual_color))
 }
 
-plot.era5_anom <- function(x, what, mcol, acol, main, mlab, alab, cmap, cmap2 = gray.colors(10), ..., ref = yearmon(c(1991, 2021))) {
+plot.era5_anom <- function(x, what, mcol, acol, main, main2, mlab, alab,
+                           cmap, cmap2 = gray.colors(10), ...,
+                           axcol = "gray90", ref = yearmon(c(1991, 2021))) {
 
     require("colorspace")
 
@@ -100,10 +108,12 @@ plot.era5_anom <- function(x, what, mcol, acol, main, mlab, alab, cmap, cmap2 = 
     a_at   <- pretty(a_ylim)
     a_ylim <- a_ylim + c(0, 0.9) * diff(a_ylim)
 
-    par(bg = "black", fg = "white", col.axis = mcol, mar = c(3.1, 4.5, 2, 4.5))
+    par(bg = "black", fg = "white", col.axis = axcol, mar = c(3.1, 4.5, 2, 4.5))
     plot(NA, xlim = xlim, ylim = m_ylim, yaxt = "n")
-    axis(side = 2, at = pretty(xm), col = mcol)
+    axis(side = 2, at = pretty(xm), col = axcol)
     mtext(side = 2, line = 3, mlab, col = mcol, at = mean(xm, na.rm = TRUE))
+    mtext(side = 3, line = .3, main,  adj = 0, col = "white", font = 2, cex = 1.8)
+    mtext(side = 3, line = .3, main2, adj = 1, col = "white", font = 1, cex = 1.8)
 
     # Adding reference
     rect(min(ref), m_ylim[1] - diff(m_ylim), max(ref), m_ylim[2] + diff(m_ylim),
@@ -128,23 +138,14 @@ plot.era5_anom <- function(x, what, mcol, acol, main, mlab, alab, cmap, cmap2 = 
     mtext(side = 4, alab, line = 2.5, col = acol, at = 0)
 }
 
-#plot(data, "t2m", "tomato", "white", cmap_2t,
-xx <- cmap_2t
-xx$color[9] <- 'red'
-plot(data, "t2m", "tomato", "white", xx,
-     main = "Lufttemperatur", mlab = "Durchschnittstemperatur [Grad C]", alab = "Anomalie [Grad C]",
-     cmap2 = diverging_hcl(11, "Blue-Red 2"))
-plot(xx$stop, pch = 19, col = xx$color, cex = 5, ylim = c(-1, 1))
-barplot(xx$stop, col = xx$color)
-barplot(abs(xx$stop) + 5, col = xx$color)
-barplot(abs(cmap_2t$stop) + 5, col = cmap_2t$color)
-plot(cmap_2t$stop, pch = 19, col = cmap_2t$color, cex = 5, ylim = c(-1, 1))
-abline(h = c(-.1, 0, .1))
 
-reto
-dev.print(file = "~/Downloads/test_t2m.jpg", width = 1000, dev = jpeg)
-
-xm
+svg(file.path(SVGDIR, sprintf("2t_%s.svg", station_info$hash)), width = 16, height = 8)
+    plot(data, "t2m", "tomato", "white", cmap_2t,
+         main = "Lufttemperatur",
+         main2 = paste(station_info$name, station_info$country, sep = ", "),
+         mlab = "Durchschnittstemperatur [Grad C]", alab = "Anomalie [Grad C]",
+         cmap2 = diverging_hcl(11, "Blue-Red 2"))
+dev.off()
 
 
 
