@@ -146,7 +146,6 @@ window.markers = false;
     $.fn.adjust_detail_panel_width = function() {
         var width = Math.round(parseFloat($(window).width()) / 2) + "px";
         $("#detail-panel").css("width", width);
-        console.log(width);
     }
 
     // Interactivity for clicking on a position marker on the map
