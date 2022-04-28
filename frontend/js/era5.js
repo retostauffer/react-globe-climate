@@ -12,7 +12,7 @@ window.markers = false;
     $.fn.add_markers = function() {
         $.ajax({
             type: "GET",
-            url: "../locations.xml",
+            url: "/locations.xml",
             dataType: "xml",
             success: function(xml) {
                 window.markers = $(xml).find("city");
@@ -26,7 +26,7 @@ window.markers = false;
                     var m = WE.marker(geo);
                     var elem = $(m.element).find(".we-pm-icon");
                     $(elem).attr("name", name).attr("country", country);
-                    $(elem).attr("style", "background-image: url('../marker-icon.svg'); height: 10px; width: 10px; margin-left: 5px; margin-top: -5px;")
+                    $(elem).attr("style", "background-image: url('marker-icon.svg'); height: 10px; width: 10px; margin-left: 5px; margin-top: -5px;")
                     m.addTo(window.earth);
                 });
             },
