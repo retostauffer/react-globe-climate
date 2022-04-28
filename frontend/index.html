@@ -23,13 +23,20 @@
         <div id="page-reload"></div>
         <!-- Left-hand side navigation for parameters and dates -->
         <div id="param-panel" class="navigation-left">
+            <h4>Parameter</h4>
             <ul id="product">
                 <li product="2t" class="active">Temperatur</li>
                 <li product="tp">Niederschlag</li>
                 <li product="ci">Meereseis</li>
                 <li product="swvl1">Bodenfeuchte (7cm)</li>
             </ul>
-            <select id="years"></select>
+            <h4>Jahr</h4>
+            <div id="years">
+                <div id="year-bwd"></div>
+                <div id="year-fwd"></div>
+                <select></select>
+            </div>
+            <h4>Monat</h4>
             <ul id="months"></ul>
         </div>
         <!-- Colormap -->

@@ -7,6 +7,7 @@ library("zoo")
 library("RSQLite")
 library("sf")
 library("tidyr")
+library("colorspace")
 
 rm(list = objects())
 
@@ -62,23 +63,23 @@ for (station_ID in locations$ID) {
 
     # ------------------------------------------------------------
     # ------------------------------------------------------------
-    svg(file.path(SVGDIR, sprintf("2t_%s.svg", station_info$hash)), width = 16, height = 8)
-        plot(data, "t2m", "tomato", "white", cmap_2t,
+    svg(file.path(SVGDIR, sprintf("2t_%s.svg", station_info$hash)), width = 16, height = 7.5)
+        plot(data, "t2m", lighten("tomato", 0.3), "white", cmap_2t,
              main = "Lufttemperatur",
              main2 = paste(station_info$name, station_info$country, sep = ", "),
              mlab = "Durchschnittstemperatur [Grad C]", alab = "Anomalie [Grad C]",
-             cmap2 = diverging_hcl(11, "Blue-Red 2"))
+             cmap2 = diverging_hcl(11, "Blue-Red 2"), add_15 = TRUE)
     dev.off()
 
-    svg(file.path(SVGDIR, sprintf("tp_%s.svg", station_info$hash)), width = 16, height = 8)
-        plot(data, "tp", "steelblue", "white", cmap_tp,
+    svg(file.path(SVGDIR, sprintf("tp_%s.svg", station_info$hash)), width = 16, height = 7.5)
+        plot(data, "tp", lighten("steelblue", 0.3), "white", cmap_tp,
              main = "Niederschlag",
              main2 = paste(station_info$name, station_info$country, sep = ", "),
              mlab = "Mittlerer Niederschlag [mm/Tag]", alab = "Anomalie [mm/Tag]",
              cmap2 = tail(cmap_tp$color, -1))
     dev.off()
 
-    svg(file.path(SVGDIR, sprintf("swvl1_%s.svg", station_info$hash)), width = 16, height = 8)
+    svg(file.path(SVGDIR, sprintf("swvl1_%s.svg", station_info$hash)), width = 16, height = 7.5)
         plot(data, "swvl1", "orange", "white", cmap_swvl1,
              main = "Bodenwassergehalt (0-7cm)",
              main2 = paste(station_info$name, station_info$country, sep = ", "),

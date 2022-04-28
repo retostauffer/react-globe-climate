@@ -31,11 +31,17 @@ get_locations <- function(file = "frontend/locations.xml") {
     name    <- xml_text(xml_find_all(doc, "city/name"))
     country <- xml_text(xml_find_all(doc, "city/country"))
     lon     <- as.numeric(xml_text(xml_find_all(doc, "city/lon")))
+    lon     <- ifelse(lon < 0, lon + 360, lon)
     lat     <- as.numeric(xml_text(xml_find_all(doc, "city/lat")))
     res     <- st_as_sf(data.frame(name = name, country = country, lon = lon, lat = lat, lon2 = lon, lat2 = lat),
                         coords = c("lon2", "lat2"), crs = 4326)
 }
 (locations <- get_locations())
+
+# Kicking out duplicated entries (Jerusalem)
+k <- st_drop_geometry(subset(locations, select = c(lon, lat)))
+idx <- which(duplicated(k))
+if (length(idx) > 0) locations <- locations[-idx, ]
 
 
 get_connection <- function(x, locations) {
@@ -115,16 +121,21 @@ interpolate_data <- function(x, con, what, bilinear = TRUE) {
     locations <- st_as_sf(locations, coords = c("lon", "lat"), crs = 4326)
 
     suppressWarnings(tmp <- read_stars(x$file, band = 1))
+    print(st_bbox(tmp))
     suppressWarnings(res <- st_extract(tmp, st_transform(locations, crs = st_crs(tmp)), bilinear = bilinear))
     names(res)[grepl("^1month", names(res))] <- "value"
     res <- na.omit(transform(st_drop_geometry(res), station_ID = locations$ID))
     SQL <- sprintf("INSERT OR IGNORE INTO %s (station_ID, yearmon, param, value) VALUES ($station_ID, %d, \"%s\", $value)",
                    x$type, x$yearmon, x$param)
     print(dim(res))
-    print(SQL)
     dbExecute(con, SQL, res)
     return(res)
 }
+
+zipfile <- zip_anomaly[1]
+inv <- get_files(DATADIR, zipfile, "anomaly")
+inv
+tmp <- lapply(seq_len(nrow(inv)), function(i) interpolate_data(inv[i, ], con))
 
 for (zipfile in zip_anomaly) {
     cat("Interpolating", zipfile, "\n")
@@ -137,6 +148,40 @@ for (zipfile in zip_mean) {
     inv <- get_files(DATADIR, zipfile, "monthlymean")
     tmp <- lapply(seq_len(nrow(inv)), function(i) interpolate_data(inv[i, ], con))
 }
+
+dbDisconnect(con)
+
+
+
+
+
+#####################################################
+# Testing
+con <- dbConnect(SQLite(), SQLITEDB)
+dbListTables(con)
+SQL <- "SELECT l.*, a.*, m.* FROM
+        (SELECT * FROM locations) AS l
+        LEFT OUTER JOIN
+        (SELECT station_ID, param AS param_anomaly, count(param) as count_anomaly FROM anomaly GROUP BY station_ID, param) AS a
+        ON l.ID = a.station_ID
+        LEFT OUTER JOIN
+        (SELECT station_ID, param AS param_mean, count(param) as count_mean FROM monthlymean GROUP BY station_ID, param) AS m
+        ON l.ID = m.station_ID
+        "
+res <- dbSendQuery(con, SQL)
+test <- fetch(res); dbClearResult(res)
+head(test)
+
+summary(test)
+par(mfrow = c(1, 2))
+plot(lat ~ lon, data = test, col = ifelse(is.na(count_mean), "red", ifelse(count_mean < 300, "blue", "gray")), pch = 19,
+     main = "monthlymean")
+plot(lat ~ lon, data = test, col = ifelse(is.na(count_anomaly), "red", ifelse(count_anomaly < 300, "blue", "gray")), pch = 19,
+     main = "anomaly")
+dbDisconnect(con)
+
+
+
 
 
 

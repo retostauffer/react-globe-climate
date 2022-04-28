@@ -40,7 +40,7 @@ window.markers = false;
 
     /* Marker interaction */
     $.fn.init_navigation_years = function() {
-        var target = $("#years");
+        var target = $("#years > select");
         for (i = 1979; i < 2022; i++) {
             $("<option value=\"" + i + "\">" + i + "</option>").appendTo(target);
         }
@@ -81,7 +81,7 @@ window.markers = false;
             prod = $(tmp).attr("product")
             $(tmp).addClass("active")
         }
-        var year = $("#years").val();
+        var year = $("#years > select").val();
         var mon  = parseInt($("#months > li.active").prop("value"));
         if (mon < 10) { mon = "0" + mon; }
         if (yearmon) {
@@ -100,18 +100,18 @@ window.markers = false;
                                       zooming = true);
             // Appending markers
             $.fn.add_markers();
-            var marker = WE.marker([0, 0]);
-            $(marker.element).find(".we-pm-icon").attr("marker_id", 10);
-            marker.addTo(earth);
+            //var marker = WE.marker([0, 0]);
+            //$(marker.element).find(".we-pm-icon").attr("marker_id", 10);
+            //marker.addTo(earth);
 
-            var m2 = WE.marker([10, 10]);
-            $(m2.element).find(".we-pm-icon").attr("marker_id", 222);
-            var m3 = WE.marker([20, 20]);
-            $(m3.element).find(".we-pm-icon").attr("marker_id", 333);
-            m2.addTo(earth);
-            m3.addTo(earth);
+            //var m2 = WE.marker([10, 10]);
+            //$(m2.element).find(".we-pm-icon").attr("marker_id", 222);
+            //var m3 = WE.marker([20, 20]);
+            //$(m3.element).find(".we-pm-icon").attr("marker_id", 333);
+            //m2.addTo(earth);
+            //m3.addTo(earth);
 
-            window.marker = marker
+            //window.marker = marker
             //marker.bindPopup("<b>Innschpruck</b>");
         }
 
@@ -207,5 +207,23 @@ window.markers = false;
             earth = $.fn.initialize_globe($.fn.get_product(), false, false);
         });
 
+        // Year navigation
+        $("#year-bwd").on("click", function() {
+             var cur = $('#years select option:selected')
+             $(cur).prev().prop('selected', 'selected');
+             $(cur).prop('selected', false)
+             $("#years select").change() // Trigger change
+        });
+        $("#year-fwd").on("click", function() {
+             var cur = $('#years select option:selected')
+             $(cur).next().prop('selected', 'selected');
+             $(cur).prop('selected', false)
+             $("#years select").change() // Trigger change
+        });
+
     });
 })(jQuery);
+
+
+
+

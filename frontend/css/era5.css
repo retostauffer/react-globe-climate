@@ -31,11 +31,45 @@ body {
     left: 0px;
     right: 0px;
     z-index: 100;
-    border: 1px solid orange;
     min-width: 300px;
     width: 20%;
     min-height: 100%;
-    background-color: black;
+    background-color: #121314; /* black; */
+    padding: 1.5em;
+    font-size: 130%;
+}
+#param-panel ul {
+    padding-left: 1em;
+}
+#param-panel #years {
+    padding-bottom: 1em;
+}
+#param-panel #years select {
+    margin-left: 1em;
+    width: 40%;
+    text-align: center;
+    background-color: #888888;
+    color: white;
+}
+#param-panel #years div {
+    float: left;
+    width: 1.5em;
+    height: 1.5em;
+    cursor: pointer;
+    border: 0.5px solid #888888;
+    background-image: url("../images/year_buttons.svg");
+    background-position: top left;
+    background-size: auto 100%;
+    background-repeat; no-repeat;
+}
+#param-panel #years div:hover {
+    background-color: #888888;
+}
+#param-panel #years div#year-bwd { margin-left: 1em; }
+#param-panel #years div#year-fwd { margin-left: 0.1em; background-position: top right; }
+#param-panel #year-bwd {
+    margin-right: .5em;
+    padding-right: .5em;
 }
 #param-panel ul li {
     list-style: none;
@@ -46,7 +80,15 @@ body {
     color: gray;
 }
 #param-panel ul li.active {
-    color: red;
+    color: #72A7DA;
+}
+#param-panel ul li.active:hover {
+    color: gray;
+}
+
+/* Things in the navigation */
+#param-panel h4 {
+    color: #cecece;
 }
 
 /* Colormap panel */
@@ -56,7 +98,6 @@ body {
     right: 0px;
     bottom: 0px;
     z-index: 100;
-    border: 1px solid yellow;
     min-width: 300px;
     width: 800px;
     min-height: 30px;
@@ -71,7 +112,6 @@ body {
 #earth-div-wrapper {
     z-index:100;
     margin-left: 300px;
-    border: 3px solid red;
 }
 
 #earth-div{

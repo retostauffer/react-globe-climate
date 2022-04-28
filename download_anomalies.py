@@ -3,6 +3,7 @@
 
 import os
 import cdsapi
+import datetime as dt
 
 cli = cdsapi.Client()
 
@@ -16,12 +17,18 @@ variables = ["0_7cm_volumetric_soil_moisture", "precipitation", "sea_ice_cover",
              "surface_air_temperature"]
 
 # Downloading anomalies
-for year in range(1979, 2022):
+for year in range(1979, dt.date.today().year + 1):
 
     outfile = f"{DATADIR}/{year}_anomalies.zip"
     print(f"Processing {outfile}")
 
-    if os.path.isfile(outfile): continue
+    if os.path.isfile(outfile) and not year == dt.date.today().year: continue
+
+    tmp = dt.date.today() - dt.timedelta(45)
+    if year == tmp.year:
+        months = [f'{x:02d}' for x in range(1, tmp.month + 1)]
+    else:
+        months = [f'{x:02d}' for x in range(1, 13)]
 
     # Downloading anomalies
     cli.retrieve(
@@ -44,12 +51,18 @@ for year in range(1979, 2022):
 
 
 # Downloading monthly means
-for year in range(1979, 2022):
+for year in range(1979, dt.date.today().year + 1):
 
     outfile = f"{DATADIR}/{year}_monthlymean.zip"
     print(f"Processing {outfile}")
 
-    if os.path.isfile(outfile): continue
+    if os.path.isfile(outfile) and not year == dt.date.today().year: continue
+
+    tmp = dt.date.today() - dt.timedelta(45)
+    if year == tmp.year:
+        months = [f'{x:02d}' for x in range(1, tmp.month + 1)]
+    else:
+        months = [f'{x:02d}' for x in range(1, 13)]
 
     # Downloading monthly means
     cli.retrieve(

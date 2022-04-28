@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <capitals>
   <city>
-      <name>Innsbruck</name>
-      <country>Austria</country>
-      <lon>11.393333</lon>
-      <lat>47.268333</lat>
-  </city>
-  <city>
     <name>Algiers</name>
     <country>Algeria</country>
     <lon>3.04</lon>
@@ -559,6 +553,12 @@
     <lat>33.72</lat>
   </city>
   <city>
+    <name>East Jerusalem</name>
+    <country>Palestinian Territory</country>
+    <lon>31.77</lon>
+    <lat>35.23</lat>
+  </city>
+  <city>
     <name>Manila</name>
     <country>Philippines</country>
     <lon>120.98</lon>
@@ -653,6 +653,12 @@
     <country>Yemen</country>
     <lon>44.21</lon>
     <lat>15.35</lat>
+  </city>
+  <city>
+    <name>Innsbruck</name>
+    <country>Austria</country>
+    <lon>11.39333</lon>
+    <lat>47.26833</lat>
   </city>
   <city>
     <name>Tirana</name>
@@ -1263,8 +1269,8 @@
   <city>
     <name>Yaren</name>
     <country>Nauru</country>
-    <lon>-0.54</lon>
-    <lat>166.93</lat>
+    <lon>166.93</lon>
+    <lat>-0.54</lat>
   </city>
   <city>
     <name>Noumea</name>
@@ -1329,8 +1335,8 @@
   <city>
     <name>Nukunonu</name>
     <country>Tokelau</country>
-    <lon>-9.2</lon>
-    <lat>-171.85</lat>
+    <lon>-171.85</lon>
+    <lat>-9.2</lat>
   </city>
   <city>
     <name>Nuku'alofa</name>

@@ -125,7 +125,7 @@ add_annual_mean <- function(xa, cmap, type = c("r", "p"), ..., pch = 19, cex = 2
 
 plot.era5_anom <- function(x, what, mcol, acol, main, main2, mlab, alab,
                            cmap, cmap2 = gray.colors(10), ...,
-                           axcol = "gray90", ref = yearmon(c(1991, 2021))) {
+                           axcol = "gray90", ref = yearmon(c(1991, 2021)), add_15 = FALSE) {
 
     require("colorspace")
 
@@ -180,7 +180,7 @@ plot.era5_anom <- function(x, what, mcol, acol, main, main2, mlab, alab,
          col = colorspace::adjust_transparency("white", .1), border = NA)
     add_annual_mean(xm, cmap2, type = "p")
 
-    lines(xm, col = mcol)
+    lines(xm, col = mcol, lwd = 2)
 
     # -------------------------------------------------
     # Adding anomalies
@@ -189,12 +189,13 @@ plot.era5_anom <- function(x, what, mcol, acol, main, main2, mlab, alab,
 
     # Adding grid for anomalies
     for (iat in a_at) lines(xlim + c(0, 1) * diff(xlim), rep(iat, 2), col = "white", lty = 2)
+    if (add_15) lines(xlim + c(0, 1) * diff(xlim), rep(1.5, 2), col = lighten("red", 0.3), lty = 3)
 
     axis(side = 4, at = a_at, col.axis = acol)
     add_annual_mean(xa, cmap)
 
     # Adding monthly anomalies
-    lines(xa, col = acol)
+    lines(xa, col = acol, lwd = 2)
     mtext(side = 4, alab, line = 2.5, col = acol, at = 0)
 }
 
