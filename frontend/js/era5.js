@@ -7,6 +7,9 @@ window.earth = false;
 window.layer = false;
 window.markers = false;
 
+window.end_year = 2022; /* Last year to show up in dropdown menu */
+window.end_month = 4;    /* Last selectable month in last year */
+
 (function($){
 
     $.fn.add_markers = function() {
@@ -38,16 +41,17 @@ window.markers = false;
 
 
 
-    /* Marker interaction */
+    /* Setting up navigation year selector */
     $.fn.init_navigation_years = function() {
         var target = $("#years > select");
-        for (i = 1979; i < 2022; i++) {
+        for (i = 1979; i <= window.end_year; i++) {
             $("<option value=\"" + i + "\">" + i + "</option>").appendTo(target);
         }
         $(target).find("option:last-child").prop("selected", true);
         /* Adding functionality */
         $(target).change(function(x) {
             $.fn.initialize_globe($.fn.get_product(), false, false);
+            $.fn.update_navigation_months();
         });
     };
 
@@ -57,7 +61,7 @@ window.markers = false;
         for (i = 0; i < vals.length; i++) {
             $("<li value=\"" + (i + 1) + "\">" + vals[i] + "</li>").appendTo(target);
         }
-        $(target).find("li[value='10']").addClass("active");
+        $(target).find("li[value='" + window.end_month + "']").addClass("active");
         /* Functionality */
         $("#months li").click(function() {
             var oval = $("#months li.active").prop("value");
@@ -72,6 +76,26 @@ window.markers = false;
         $(target).change(function(x) {
             $.fn.initialize_globe($.fn.get_product(), false, false);
         });
+    }
+
+    $.fn.update_navigation_months = function() {
+        /* Getting current year */
+        var year = $("#years > select").val();
+        console.log(year)
+
+        /* If year < window.end_year: all active */
+        if (year < window.end_year) {
+            $.each($("#months li"), function() {
+                $(this).removeClass("disabled")
+            });
+        /* Else disable months after window.end_month (int) */
+        } else {
+            $.each($("#months li"), function() {
+                if (parseInt($(this).prop("value")) > window.end_month) {
+                    $(this).addClass("disabled")
+                }
+            });
+        }
     }
 
     $.fn.get_product = function(yearmon = true) {
@@ -173,8 +197,10 @@ window.markers = false;
     // On document ready: Initialize globe
     $(document).ready(function() {
 
+        /* Note that they rely on window.end_year and window.end_month! */
         $.fn.init_navigation_years();
         $.fn.init_navigation_months();
+        $.fn.update_navigation_months();
 
         // Triggering adjustment of details panel
         $.fn.adjust_detail_panel_width();

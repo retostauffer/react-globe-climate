@@ -2,5 +2,5 @@
 
 
 
-test:
-	./create_test_tiles.sh
+#test:
+#	./create_test_tiles.sh

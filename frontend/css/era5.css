@@ -86,6 +86,11 @@ body {
     color: gray;
 }
 
+#param-panel ul li.disabled {
+    cursor: none;
+    display: none;
+}
+
 /* Things in the navigation */
 #param-panel h4 {
     color: #cecece;

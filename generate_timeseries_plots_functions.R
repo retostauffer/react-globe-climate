@@ -189,13 +189,16 @@ plot.era5_anom <- function(x, what, mcol, acol, main, main2, mlab, alab,
 
     # Adding grid for anomalies
     for (iat in a_at) lines(xlim + c(0, 1) * diff(xlim), rep(iat, 2), col = "white", lty = 2)
-    if (add_15) lines(xlim + c(0, 1) * diff(xlim), rep(1.5, 2), col = lighten("red", 0.3), lty = 3)
 
     axis(side = 4, at = a_at, col.axis = acol)
     add_annual_mean(xa, cmap)
 
     # Adding monthly anomalies
     lines(xa, col = acol, lwd = 2)
+
+    # Adding 1.5 degree mark for temperature
+    if (add_15) lines(xlim + c(0, 1) * diff(xlim), rep(1.5, 2), lwd = 2, col = lighten("red", 0.3), lty = 3)
+
     mtext(side = 4, alab, line = 2.5, col = acol, at = 0)
 }
 
