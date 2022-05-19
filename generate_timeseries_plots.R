@@ -64,7 +64,6 @@ for (station_ID in locations$ID) {
     # ------------------------------------------------------------
     # ------------------------------------------------------------
     svg(file.path(SVGDIR, sprintf("2t_%s.svg", station_info$hash)), width = 16, height = 7.5)
-    source("generate_timeseries_plots_functions.R")
         plot(data, "t2m", lighten("tomato", 0.3), "white", cmap_2t,
              main = "Lufttemperatur",
              main2 = paste(station_info$name, station_info$country, sep = ", "),
