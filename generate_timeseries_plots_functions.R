@@ -107,17 +107,24 @@ get_mapnik_colorcoding <- function(file) {
 
 
 # Adding annual mean
-add_annual_mean <- function(xa, cmap, type = c("r", "p"), ..., pch = 19, cex = 2) {
+add_annual_mean <- function(xa, cmap, type = c("r", "p"), ..., pch = c(19, 4), cex = 2) {
     type <- match.arg(type)
-    annual <- aggregate(xa, format(index(xa), "%Y"), mean)
+    annual   <- aggregate(xa, format(index(xa), "%Y"), mean)
+    annual_n <- aggregate(xa, format(index(xa), "%Y"), length)
+    pch <- rep(pch, 2)
     annual_color <- as.character(cut(annual, breaks = cmap$stop, label = tail(cmap$color, -1), include.lowest = TRUE))
     reto <<- list(annual = annual, color =annual_color)
     if (type == "r") {
         for (i in seq_along(annual)) {
             tmp <- yearmon(as.integer(index(annual[i])))
-            rect(tmp, 0, tmp + 1, annual[i], col = annual_color[i], border = NA)
+            if (annual_n[i] == 12) {
+                rect(tmp, 0, tmp + 1, annual[i], col = annual_color[i], border = NA)
+            } else {
+                rect(tmp, 0, tmp + 1, annual[i], border = annual_color[i])
+            }
         }
     } else {
+        pch <- ifelse(annual_n == 12, pch[1], pch[2])
         points(yearmon(as.integer(index(annual))) + 0.5, annual, col = annual_color, pch = pch, cex = cex)
     }
     invisible(data.frame(value = coredata(annual), index = index(annual), color = annual_color))
