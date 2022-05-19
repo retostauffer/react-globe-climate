@@ -56,7 +56,10 @@ window.end_month = 4;    /* Last selectable month in last year */
     };
 
     $.fn.init_navigation_months = function() {
-        var vals = ["JAN", "FEB", "MAR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        var vals = ["Januar", "Februar", "M&auml;rz",
+                    "April", "Mai", "Juni", "Juli",
+                    "August", "September", "Oktober",
+                    "November", "Dezember"]
         var target = $("#months");
         for (i = 0; i < vals.length; i++) {
             $("<li value=\"" + (i + 1) + "\">" + vals[i] + "</li>").appendTo(target);
@@ -145,7 +148,7 @@ window.end_month = 4;    /* Last selectable month in last year */
         var tile_url = domain + pathname + "/tiles/" + product + "/{z}/{x}/{y}.png"
 
         if (window.layer !== false) {
-            console.log('I have a layer');
+            //////console.log('I have a layer');
             window.layer.removeFrom(window.earth);
         }
 
@@ -245,6 +248,64 @@ window.end_month = 4;    /* Last selectable month in last year */
              $(cur).next().prop('selected', 'selected');
              $(cur).prop('selected', false)
              $("#years select").change() // Trigger change
+        });
+
+
+        /* Keypress features
+         * Key:  39: right
+         *       37: left
+         *       38: up
+         *       40: down
+         * KeyL  49: '1'
+         *       50: '2'
+         *       51: '3'
+         *       52: '4'
+         */
+        $(document).bind("keydown", function(e) {
+            var nav_keys     = [39, 37, 38, 40];
+            var product_keys = [49, 50, 51, 52];
+
+            // Changing year/month
+            if (nav_keys.indexOf(e.which) >= 0) {
+                if (e.which == 38) {
+                    // Previous 'months li'. Check if found and not disabled.
+                    var tmp = $("ul#months > li.active").prev();
+                    if (tmp.length > 0 && !tmp.hasClass("disabled")) { tmp.click(); }
+                } else if (e.which == 40) {
+                    // Previous 'months li'. Check if found and not disabled.
+                    var tmp = $("ul#months > li.active").next();
+                    if (tmp.length > 0 && !tmp.hasClass("disabled")) { tmp.click(); }
+                } else if (e.which == 37) {
+                    // Move to previous year if there is one
+                    var tmp = $("#years > select > option:selected").prev();
+                    if (tmp.length > 0) {
+                        $(tmp).prop("selected", true);
+                        $("#years > select").trigger("change");
+                    }
+                } else if (e.which == 39) {
+                    // Move to next year if there is one
+                    var tmp = $("#years > select > option:selected").next();
+                    if (tmp.length > 0) {
+                        $(tmp).prop("selected", true);
+                        $("#years > select").trigger("change");
+                    }
+                }
+            }
+
+            // Changing products
+            if (product_keys.indexOf(e.which) >= 0) {
+                if (e.which == 49) {
+                    $("ul#product > li[product='2t']").click();
+                } else if (e.which == 50) {
+                    $("ul#product > li[product='tp']").click();
+                } else if (e.which == 51) {
+                    $("ul#product > li[product='ci']").click();
+                } else if (e.which == 52) {
+                    $("ul#product > li[product='swvl1']").click();
+                }
+                event.preventDefault(); // Prevent default key functionality
+            }
+            //console.log(e.which)
         });
 
     });
