@@ -71,7 +71,8 @@ dev.off()
 # --------------------------------------------------
 tp <- subset(all_limits, variable == "tp")
 tp_limits <- max(c(min(tp$min), max(tp$max))) * c(-1.01, 1.01)
-tp_colors <- hcl.colors(15, "Earth", rev = TRUE)
+#tp_colors <- hcl.colors(15, "Earth", rev = TRUE)
+tp_colors <- hcl.colors(15, "Earth", rev = FALSE)
 fn <- function(n, pow = 1.5, lo = 0, hi = 1, digits = 4) {
     stopifnot(n %% 2 == 1L) # Must be an odd number
     res <- seq(-1, 1, length.out = n + 1)
