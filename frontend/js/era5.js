@@ -192,6 +192,19 @@ window.end_month = 4;    /* Last selectable month in last year */
         $(".sparkling-modal-frame").css("margin-left", Math.round((width + 40) / -2) + "px");
     });
 
+    // Help page (the info page)
+    $(document).on("click", "#page-info", function() {
+        var width  = parseInt($(window).width()) - 200;
+        var height = parseInt($(window).height()) - 200;
+        $.modalLink.open("info.php", {
+            height: height, width: width,
+            overlayOpacity: 0.6
+        });
+        // Center that thing; the plugin has a slight offset (20px); hardcoded
+        // adding another +40 to fix this.
+        $(".sparkling-modal-frame").css("margin-left", Math.round((width + 40) / -2) + "px");
+    });
+
     // Reload button to reset view
     $(document).on("click", "#page-reload", function() {
         location.reload("true");
