@@ -40,7 +40,8 @@
      </Rule>
   </Style>
   
-  <Layer name="countries" srs="+proj=latlong +datum=WGS84" status="on">
+  <!--<Layer name="countries" srs="+proj=latlong +datum=WGS84" status="on">-->
+  <Layer name="countries" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" status="on">
     <!-- Style order determines layering hierarchy -->
     <!-- Labels go on top so they are listed second -->
     <StyleName>population</StyleName>

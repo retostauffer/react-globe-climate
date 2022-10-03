@@ -183,12 +183,23 @@
     Computer für den Privatgebrauch hat Heute meist 1-4 Terrabyte an Speicherplatz.
     </p>
 
+    <h3>Erstellt durch</h3>
+
+    <p>
+        <ul>
+            <li style="font-weight: bold;">Reto Stauffer</li>
+            <li>Institut für Statistik, Fakultät für Volkswirtschaft und Statistik</li>
+            <li>und Digital Science Center, Universität Innsbruck</li>
+        </ul>
+    </p>
+
     <h3>Referenzen und Links</h3>
     <ul>
         <li id="ipcc">IPCC (2022): Summary for Policymakers, <a href="https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_SPM.pdf">weblink</a>
         <li id="hersbach">ERA5: Hersbach, H. et al. (2018): ERA5 hourly data on single levels from 1979 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS), <a href="https://doi.org/10.24381/cds.adbb2d47">doi:10.24381/cds.adbb2d47</a>.
         <li id="cds">ERA5 Climate Variability Data: Frei zug&auml;nglich &uuml;ber den <a href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/ecv-for-climate-change?tab=form">Climate Data Store</a>.
     </ul>
+
 </body>
 
 </html>

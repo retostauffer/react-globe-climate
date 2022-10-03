@@ -1,7 +1,45 @@
 
 
+# Conda mapnik?
+
 # WebGL globe for DiSC demo
 
+## Mapnik
+
+Issues October 2022 to install the library as the current release `3.1`
+does not support Python 3.10. Currently trying to build the library
+from the master branch. According to <https://github.com/mapnik/mapnik/blob/master/INSTALL.md>
+
+With commit <https://github.com/mapnik/mapnik/commit/53a8e2ec2c31862f1072950885b4b90279d0129d>.
+
+```
+# you might have to update your outdated clang
+sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+sudo apt-get update -y
+sudo apt-get install -y gcc-6 g++-6 clang-3.8
+export CXX="clang++-3.8" && export CC="clang-3.8"
+
+# install mapnik
+git clone https://github.com/mapnik/mapnik mapnik --depth 10
+cd mapnik
+git submodule update --init
+sudo apt-get install zlib1g-dev clang make pkg-config curl
+source bootstrap.sh
+PYTHON=python3 ./configure CUSTOM_CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" CXX=${CXX} CC=${CC}
+```
+
+Manually applied this:
+
+* <https://github.com/mapnik/mapnik/issues/4243>
+
+
+```
+###PYTHON=python3 make
+###PYTHON=python3 make test
+sudo PYTHON=python3 make install
+```
+
+**This helped at leat with installation ....**
 
 ## Downloading data
 

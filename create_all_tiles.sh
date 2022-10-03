@@ -27,6 +27,10 @@ set -e
 VARS=(2t ci swvl1 tp)
 curr_year=`date -d "-45 days" +%Y`
 curr_mon=`date -d "-45 days" +%m`
+curr_year=`printf "%.0f" "${curr_year}"`
+curr_mon=`printf "%.0f" "${curr_mon}"`
+
+printf "Current year/month (up to which we process):    %04d-%02d\n\n" ${curr_year} ${curr_mon}
 
 for var in ${VARS[@]}; do
     year=1979

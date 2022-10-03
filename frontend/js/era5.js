@@ -8,7 +8,7 @@ window.layer = false;
 window.markers = false;
 
 window.end_year = 2022; /* Last year to show up in dropdown menu */
-window.end_month = 4;    /* Last selectable month in last year */
+window.end_month = 8;    /* Last selectable month in last year */
 
 (function($){
 
