@@ -61,6 +61,7 @@ get_data <- function(ID, con) {
     SQL2 <- sprintf(SQL, "monthlymean", ID)
     m_res <- dbSendQuery(con, SQL2)
     m_data <- fetch(m_res); dbClearResult(m_res)
+    if (NROW(m_data) == 0 & NROW(a_data) == 0) return(NULL)
 
     # Renaming some things ...
     fn <- function(x, what, renaming = c("2t" = "t2m")) {
@@ -71,6 +72,7 @@ get_data <- function(ID, con) {
         names(x) <- paste(names(x), what, sep = "_")
         return(x)
     }
+
     # Prepare data, merge and sort columns
     a_data <- fn(a_data, "anomaly"); m_data <- fn(m_data, "monthlymean")
     data <- merge(a_data, m_data)

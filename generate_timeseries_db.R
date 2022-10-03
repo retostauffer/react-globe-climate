@@ -141,6 +141,11 @@ for (zipfile in zip_anomaly) {
     cat("Interpolating", zipfile, "\n")
     inv <- get_files(DATADIR, zipfile, "anomaly")
     tmp <- lapply(seq_len(nrow(inv)), function(i) interpolate_data(inv[i, ], con))
+
+    # Delete files from tmp
+    files2del <- list.files(tempdir())
+    files2del <- files2del[grepl(".*\\.(tif|grib)$", files2del)]
+    for (fd in files2del) file.remove(file.path(tempdir(), fd))
 }
 
 for (zipfile in zip_mean) {

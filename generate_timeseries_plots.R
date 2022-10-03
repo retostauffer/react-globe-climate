@@ -36,7 +36,7 @@ for (station_ID in locations$ID) {
     cat("Processing", station_info$hash, "\n")
 
     data <- get_data(station_info$ID, con)
-    if (is.null(dim(data))) {
+    if (is.null(data) || is.null(dim(data))) {
         cat("         [!] NO DATA\n")
         next
     }
